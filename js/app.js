@@ -228,42 +228,82 @@ const PDFGenerator = {
         const pdfContent = this.createPDFContent();
         
         // In production, use a library like jsPDF or pdfmake
-        // For now, create a simple text download
+        // For now, create a professional text download
         const blob = new Blob([pdfContent], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'my-course-path.txt';
+        
+        // Generate filename with date
+        const date = new Date().toISOString().split('T')[0];
+        a.download = `PolyMotivator_Pathway_Plan_${date}.txt`;
+        
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         
         // Show success message in chatbot
-        Chatbot.addMessage('bot', 'Your course path has been downloaded! Check your downloads folder.');
+        Chatbot.addMessage('bot', '✅ Pathway plan exported successfully! The document includes space for counsellor notes and parent acknowledgment. Great for student portfolios and follow-up sessions. 📄');
     },
     
     createPDFContent() {
-        let content = '='.repeat(60) + '\n';
-        content += '           POLYMOTIVATOR - YOUR PERSONALIZED COURSE PATH\n';
-        content += '='.repeat(60) + '\n\n';
-        content += `Generated on: ${new Date().toLocaleDateString()}\n\n`;
-        content += 'YOUR PLAN:\n';
-        content += '-'.repeat(60) + '\n';
+        let content = '='.repeat(70) + '\n';
+        content += '              POLYMOTIVATOR - CAREER PATHWAY GUIDANCE PLAN\n';
+        content += '='.repeat(70) + '\n\n';
+        content += `Generated: ${new Date().toLocaleDateString('en-SG', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        })}\n`;
+        content += `Time: ${new Date().toLocaleTimeString('en-SG')}\n\n`;
+        content += 'STUDENT PROFILE & INTERESTS:\n';
+        content += '-'.repeat(70) + '\n';
         content += AppState.userPlan + '\n\n';
-        content += 'RECOMMENDED COURSE PATH:\n';
-        content += '-'.repeat(60) + '\n\n';
+        content += 'PERSONALIZED POLYTECHNIC PREPARATION PATHWAY:\n';
+        content += '-'.repeat(70) + '\n';
+        content += 'This structured plan provides step-by-step guidance for polytechnic\n';
+        content += 'preparation. Students should work through each step systematically.\n';
+        content += 'Counsellors can use this plan as a framework for follow-up sessions.\n\n';
         
         AppState.coursePath.forEach((step, index) => {
-            content += `STEP ${step.stepNumber}: ${step.title}\n`;
-            content += `${step.description}\n`;
-            content += `Focus Areas: ${step.tags.join(', ')}\n\n`;
+            content += `STEP ${step.stepNumber}: ${step.title.toUpperCase()}\n`;
+            content += `${'-'.repeat(70)}\n`;
+            content += `Description:\n${step.description}\n\n`;
+            content += `Key Focus Areas:\n`;\
+            step.tags.forEach(tag => {
+                content += `  • ${tag}\n`;\
+            });
+            content += `\nStatus: [ ] Not Started  [ ] In Progress  [ ] Completed\n`;
+            content += `Notes:\n${'_'.repeat(70)}\n`;
+            content += `${'_'.repeat(70)}\n\n`;
         });
         
-        content += '='.repeat(60) + '\n';
-        content += 'Good luck on your polytechnic journey!\n';
-        content += 'Visit PolyMotivator for more resources and support.\n';
-        content += '='.repeat(60) + '\n';
+        content += '='.repeat(70) + '\n';
+        content += 'RECOMMENDATIONS FOR SUCCESS:\n';
+        content += '='.repeat(70) + '\n';
+        content += '1. Work through steps sequentially for best results\n';
+        content += '2. Set specific deadlines for each step\n';
+        content += '3. Track progress and adjust timeline as needed\n';
+        content += '4. Seek help from counsellors, teachers, or mentors when stuck\n';
+        content += '5. Review and update this plan every 2-4 weeks\n\n';
+        content += 'COUNSELLOR NOTES:\n';
+        content += '-'.repeat(70) + '\n';
+        content += 'Next Session Date: _____________\n';
+        content += 'Priority Discussion Points:\n';
+        content += '_'.repeat(70) + '\n';
+        content += '_'.repeat(70) + '\n\n';
+        content += 'PARENT/GUARDIAN ACKNOWLEDGMENT:\n';
+        content += '-'.repeat(70) + '\n';
+        content += 'I have reviewed this pathway plan with my child.\n\n';
+        content += 'Parent/Guardian Name: _______________________  Date: __________\n';
+        content += 'Signature: _______________________\n\n';
+        content += '='.repeat(70) + '\n';
+        content += 'PolyMotivator - Educational Guidance System\n';
+        content += 'For students and school counsellors in Singapore\n';
+        content += 'Visit: [Your School Career Guidance Portal]\n';
+        content += '='.repeat(70) + '\n';
         
         return content;
     }
@@ -309,7 +349,7 @@ const Chatbot = {
         
         const avatar = document.createElement('div');
         avatar.className = 'message-avatar';
-        avatar.textContent = type === 'bot' ? '🤖' : '👤';
+        avatar.textContent = type === 'bot' ? '🎓' : '👤';
         
         const content = document.createElement('div');
         content.className = 'message-content';
@@ -349,34 +389,44 @@ const Chatbot = {
         const activeStepNum = activeStep ? activeStep.stepNumber : 0;
         
         if (msg.includes('hello') || msg.includes('hi')) {
-            return "Hello! I'm walking this journey with you, one step at a time. Feel free to ask any questions as we progress together! 🚶";
+            return "Hello! I'm here to provide guidance throughout this pathway planning session. How can I assist you and the student today? 🎓";
+        } else if (msg.includes('counsellor') || msg.includes('counselor') || msg.includes('teacher')) {
+            return "This system is designed to support both independent student exploration and counsellor-guided sessions. You can use the generated pathway plan as a discussion framework during career guidance meetings.";
+        } else if (msg.includes('session') || msg.includes('meeting')) {
+            return "For counselling sessions: Review the generated pathway with the student, discuss each step's relevance, and export the plan as a take-home resource. This helps maintain continuity between sessions.";
         } else if (msg.includes('where') || msg.includes('which step') || msg.includes('current')) {
             if (activeStep) {
-                return `We're currently at Step ${activeStepNum}: "${activeStep.title}". Take your time with this stage, and click it when you're ready to move forward together! 🚶`;
+                return `The student is currently at Step ${activeStepNum}: "${activeStep.title}". This is a good discussion point for the current session. 📝`;
             } else {
-                return "We've completed all the steps together! You've walked through your entire course path. Great job! 🎉";
+                return "All pathway steps have been reviewed. Consider discussing implementation timeline and support resources with the student.";
             }
         } else if (msg.includes('next') || msg.includes('what\'s next')) {
             const nextStep = AppState.coursePath.find(s => s.status === 'pending');
             if (nextStep) {
-                return `After we complete the current step, we'll walk to Step ${nextStep.stepNumber}: "${nextStep.title}". One step at a time! 🚶✨`;
+                return `The next step is Step ${nextStep.stepNumber}: "${nextStep.title}". This can be covered in a follow-up session or assigned as student homework.`;
             } else {
-                return "You're on the final step! Complete it and we'll have walked through your entire journey together! 🎉";
+                return "This completes the pathway plan. Consider scheduling a follow-up session to review progress and adjust as needed.";
             }
         } else if (msg.includes('diploma') || msg.includes('course')) {
-            return "Your recommended path includes specific steps tailored to your chosen diploma. I'm walking with you through each stage to ensure you're well-prepared!";
+            return "The recommended pathway is tailored to the student's indicated diploma interest. Use this as a starting point for deeper exploration of specific programmes.";
         } else if (msg.includes('help') || msg.includes('what can')) {
-            return "I'm your guide on this journey! I'll walk with you through each step of your course path, answer questions, and provide encouragement along the way. What would you like to know? 🚶";
-        } else if (msg.includes('pdf') || msg.includes('download')) {
-            return "You can download your personalized course path as a PDF using the 'Download PDF' button above! It's great for keeping track of our journey together. 📄";
-        } else if (msg.includes('change') || msg.includes('different')) {
-            return "To create a different path, click the 'Start Over' button and describe your new plan! I'll walk through the new journey with you. 🔄";
+            return "I can help with: pathway explanation, step-by-step guidance, session planning tips, and answering student questions. What would you like to know? 🎓";
+        } else if (msg.includes('pdf') || msg.includes('download') || msg.includes('export')) {
+            return "Export the pathway plan using the 'Export Pathway Plan' button. This provides a professional PDF that students can take home and share with parents/guardians. 📄";
+        } else if (msg.includes('print')) {
+            return "After exporting, the PDF can be printed for the student's portfolio or saved digitally for reference. Great for documentation purposes!";
+        } else if (msg.includes('change') || msg.includes('different') || msg.includes('redo')) {
+            return "To generate a different pathway, click 'Start Over' and enter updated student information. Useful when exploring alternative diploma options during the session.";
+        } else if (msg.includes('parent') || msg.includes('guardian')) {
+            return "The exported pathway plan is parent-friendly and can be shared during parent-teacher conferences or sent home for family discussion.";
         } else if (msg.includes('thank')) {
-            return "You're welcome! I'm here to walk alongside you every step of the way. Let's keep moving forward together! 💪🚶";
+            return "You're welcome! I'm here to support effective career guidance sessions. Feel free to use this system with all your students! 💪";
         } else if (msg.includes('go back') || msg.includes('previous') || msg.includes('undo')) {
-            return "No problem! You can click on any completed step to revisit it. I'll walk back with you to review that stage. 🚶";
+            return "Click any completed step to revisit it during the session. This is helpful for reviewing or clarifying specific recommendations with the student.";
+        } else if (msg.includes('time') || msg.includes('how long')) {
+            return "The pathway typically covers 3-6 months of preparation. Adjust the timeline based on the student's current academic stage and available time before polytechnic application.";
         } else {
-            return `That's a great question! We're currently walking through your course path together. ${activeStep ? `Focus on Step ${activeStepNum} for now, and I'll guide you to the next stage when you're ready!` : 'Would you like more details about any particular step?'} 🚶✨`;
+            return `Great question! ${activeStep ? `The current focus is on Step ${activeStepNum}. This step is important for building foundation toward the student's diploma goal.` : 'Consider discussing the overall pathway structure and identifying priority actions.'} Feel free to explore specific steps in detail! 🎓`;
         }
     }
 };
@@ -473,7 +523,7 @@ const PathDisplay = {
         
         if (step.status === 'pending') {
             // Can't mark pending steps - must complete in order
-            Chatbot.addMessage('bot', `Let's complete the current step first! I'm walking with you through each stage of your journey. 🚶`);
+            Chatbot.addMessage('bot', `Please complete steps in sequential order. This ensures comprehensive preparation. Currently working on an earlier step. 📝`);
             return;
         } else if (step.status === 'active') {
             step.status = 'completed';
@@ -482,9 +532,9 @@ const PathDisplay = {
             if (index + 1 < AppState.coursePath.length) {
                 AppState.coursePath[index + 1].status = 'active';
                 const nextStep = AppState.coursePath[index + 1];
-                Chatbot.addMessage('bot', `Excellent! We've completed "${step.title}". Now let's walk together to the next stage: "${nextStep.title}". I'm here to guide you! 🚶✨`);
+                Chatbot.addMessage('bot', `✅ Step ${step.stepNumber} completed: "${step.title}". Moving to Step ${nextStep.stepNumber}: "${nextStep.title}". ${index < 2 ? 'Good progress in this session!' : 'Excellent systematic approach!'} 🎓`);
             } else {
-                Chatbot.addMessage('bot', `Amazing! We've walked through all the steps together! You've completed your entire course path. You're ready for your polytechnic journey! 🎉🎓`);
+                Chatbot.addMessage('bot', `🎉 Pathway Complete! All ${AppState.coursePath.length} steps reviewed. The student now has a comprehensive preparation roadmap. Recommend exporting for future reference and scheduling follow-up check-ins. 🎓✨`);
             }
         } else if (step.status === 'completed') {
             // Allow unchecking to go back
@@ -495,7 +545,7 @@ const PathDisplay = {
                     AppState.coursePath[i].status = 'pending';
                 }
             }
-            Chatbot.addMessage('bot', `No problem! Let's revisit "${step.title}" together. I'm walking back with you to this step. 🚶`);
+            Chatbot.addMessage('bot', `Returning to Step ${step.stepNumber}: "${step.title}" for review. This is useful for clarifying details or adjusting the plan during the session. 🔄`);
         }
         
         this.renderPath(AppState.coursePath);
@@ -597,7 +647,7 @@ const InputHandler = {
         
         // Show chatbot
         Chatbot.show();
-        Chatbot.addMessage('bot', `I've analyzed your plan and created a personalized ${AppState.coursePath.length}-step course path for you! I'll walk alongside you through each stage of your journey. Let's start with Step 1! Click on it when you're ready to begin. 🚶✨`);
+        Chatbot.addMessage('bot', `Pathway analysis complete! I've generated a ${AppState.coursePath.length}-step personalized plan based on the student profile. Counsellors: Use this as a discussion framework. Students: Follow along step-by-step. Click Step 1 to begin! 🎓✨`);
         
         // Scroll to results
         document.getElementById('path-display')?.scrollIntoView({ behavior: 'smooth' });

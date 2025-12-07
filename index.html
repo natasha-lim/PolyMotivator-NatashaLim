@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PolyMotivator - Keep students focused, confident, and exam-ready with dynamic motivation tips and personalised study guidance">
-    <meta name="keywords" content="polytechnic, motivation, study tips, O-Level, N-Level, ITE, Singapore, exam preparation">
-    <meta name="author" content="PolyMotivator Team">
+    <meta name="description" content="PolyMotivator - AI-powered polytechnic course path guidance system for students and school counsellors. Generate personalized diploma recommendations and step-by-step preparation plans.">
+    <meta name="keywords" content="polytechnic, career guidance, school counselling, diploma planning, O-Level, N-Level, ITE, Singapore, career pathway">
+    <meta name="author" content="PolyMotivator - Educational Guidance System">
     <meta name="theme-color" content="#6366F1">
     
     <!-- Open Graph / Social Media -->
@@ -14,7 +14,7 @@
     <meta property="og:description" content="Stay focused, confident, and exam-ready with personalized study guidance">
     <meta property="og:image" content="/assets/og-image.png">
     
-    <title>PolyMotivator - Stay Focused, Confident & Exam-Ready</title>
+    <title>PolyMotivator - Polytechnic Course Path Guidance System</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
@@ -62,12 +62,33 @@
         <section class="hero" id="home">
             <div class="container">
                 <div class="hero-content-centered">
+                    <div class="system-badge">AI-Powered Career Guidance System</div>
                     <h1 class="hero-title">
-                        Your <span class="highlight">Personalized Course Path</span> Awaits
+                        <span class="highlight">Personalized Polytechnic</span> Course Pathway Planning
                     </h1>
                     <p class="hero-subtitle">
-                        Share your current plan and let our AI guide you through a tailored polytechnic journey with step-by-step recommendations.
+                        An intelligent guidance system designed for students and school counsellors to create tailored polytechnic preparation roadmaps based on individual strengths, interests, and diploma aspirations.
                     </p>
+                    <div class="hero-features">
+                        <div class="feature-badge">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                            </svg>
+                            For Students
+                        </div>
+                        <div class="feature-badge">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+                            </svg>
+                            For Counsellors
+                        </div>
+                        <div class="feature-badge">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd"/>
+                            </svg>
+                            PDF Export
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -78,19 +99,36 @@
                 <div class="generator-container">
                     <!-- Input Area -->
                     <div class="input-section">
+                        <div class="session-info">
+                            <div class="info-card">
+                                <span class="info-icon">👨‍🎓</span>
+                                <div class="info-content">
+                                    <h4>For Students</h4>
+                                    <p>Explore your polytechnic options independently</p>
+                                </div>
+                            </div>
+                            <div class="info-card">
+                                <span class="info-icon">👨‍🏫</span>
+                                <div class="info-content">
+                                    <h4>For Counsellors</h4>
+                                    <p>Guide students during career counselling sessions</p>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <label for="student-plan" class="input-label">
                             <span class="label-icon">💭</span>
-                            <span class="label-text">Type your current plan</span>
+                            <span class="label-text">Student Information & Career Interests</span>
                         </label>
                         <textarea 
                             id="student-plan" 
                             class="plan-textarea" 
-                            placeholder="Tell us about your interests, strengths, and diploma preferences...&#10;&#10;Example: I'm interested in technology and design. I did well in Maths and Art. I'm considering Information Technology or Digital Media Design diplomas..."
+                            placeholder="Enter student's academic profile and career interests...&#10;&#10;Example:&#10;- Academic Strengths: Mathematics (A2), Science (B3), English (B4)&#10;- Interests: Technology, problem-solving, creating apps&#10;- Diploma Considerations: Information Technology, Cybersecurity&#10;- Career Goals: Software developer or IT security specialist&#10;- Preferred Learning Style: Hands-on, project-based&#10;&#10;Counsellors: Use this during sessions to generate personalized guidance plans for students."
                             rows="6"
                             aria-describedby="plan-hint"
                         ></textarea>
                         <p id="plan-hint" class="input-hint">
-                            Share your academic strengths, interests, and potential diploma choices
+                            💡 Include academic performance, interests, strengths, diploma preferences, and career aspirations for best results
                         </p>
                         <button class="btn btn-primary btn-generate" id="generate-btn" disabled>
                             <svg class="btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
@@ -103,13 +141,16 @@
                     <!-- Course Path Display -->
                     <div class="path-display" id="path-display" style="display: none;">
                         <div class="path-header">
-                            <h2 class="path-title">Your Personalized Course Path</h2>
+                            <div>
+                                <h2 class="path-title">Personalized Course Pathway Plan</h2>
+                                <p class="path-subtitle">Generated guidance roadmap based on student profile</p>
+                            </div>
                             <div class="path-actions">
                                 <button class="btn btn-outline btn-sm" id="download-pdf-btn">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
                                     </svg>
-                                    Download PDF
+                                    Export Pathway Plan
                                 </button>
                                 <button class="btn btn-secondary btn-sm" id="reset-btn">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
@@ -150,10 +191,10 @@
                     <!-- Chatbot Interface -->
                     <div class="chatbot-container" id="chatbot" style="display: none;">
                         <div class="chatbot-header">
-                            <div class="chatbot-avatar">🤖</div>
+                            <div class="chatbot-avatar">🎓</div>
                             <div class="chatbot-info">
-                                <h3 class="chatbot-name">Course Path Assistant</h3>
-                                <p class="chatbot-status">Online</p>
+                                <h3 class="chatbot-name">Guidance Assistant</h3>
+                                <p class="chatbot-status">Ready to help</p>
                             </div>
                             <button class="chatbot-toggle" id="chatbot-toggle" aria-label="Minimize chatbot">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
@@ -163,9 +204,9 @@
                         </div>
                         <div class="chatbot-messages" id="chatbot-messages">
                             <div class="message bot-message">
-                                <div class="message-avatar">🤖</div>
+                                <div class="message-avatar">🎓</div>
                                 <div class="message-content">
-                                    <p>Hi! I'm analyzing your plan and creating a personalized course path for you. Feel free to ask me any questions!</p>
+                                    <p>Hello! I'm the PolyMotivator Guidance Assistant. I'll help analyze the student profile and provide personalized pathway recommendations. Feel free to ask questions during the session!</p>
                                 </div>
                             </div>
                         </div>
@@ -456,7 +497,7 @@
                         </svg>
                         <span class="brand-name">PolyMotivator</span>
                     </div>
-                    <p class="footer-tagline">Empowering your polytechnic journey</p>
+                    <p class="footer-tagline">Professional career guidance system for polytechnic pathway planning</p>
                 </div>
                 
                 <div class="footer-links">
@@ -483,8 +524,8 @@
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2025 PolyMotivator. All rights reserved.</p>
-                <p>Made with <span aria-label="love">❤️</span> for students in Singapore</p>
+                <p>&copy; 2025 PolyMotivator - Educational Guidance System. All rights reserved.</p>
+                <p>Designed for students and school counsellors in Singapore 🇸🇬</p>
             </div>
         </div>
     </footer>
