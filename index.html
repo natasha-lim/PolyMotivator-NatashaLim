@@ -49,9 +49,8 @@
             
             <ul class="nav-menu" role="list">
                 <li><a href="#home" class="nav-link active">Home</a></li>
-                <li><a href="#motivation" class="nav-link">Motivation</a></li>
-                <li><a href="#study-tips" class="nav-link">Study Tips</a></li>
-                <li><a href="#checklist" class="nav-link">Checklist</a></li>
+                <li><a href="#generator" class="nav-link">Generate Path</a></li>
+                <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
                 <li><a href="#resources" class="nav-link">Resources</a></li>
             </ul>
         </nav>
@@ -59,45 +58,138 @@
 
     <!-- Main Content -->
     <main id="main-content" role="main">
-        <!-- Hero Section -->
+        <!-- Hero Section - Course Path Generator -->
         <section class="hero" id="home">
             <div class="container">
-                <div class="hero-content">
+                <div class="hero-content-centered">
                     <h1 class="hero-title">
-                        Your Journey to <span class="highlight">Polytechnic Success</span> Starts Here
+                        Your <span class="highlight">Personalized Course Path</span> Awaits
                     </h1>
                     <p class="hero-subtitle">
-                        Stay focused, confident, and exam-ready with personalized motivation and study guidance tailored to your diploma pathway.
+                        Share your current plan and let our AI guide you through a tailored polytechnic journey with step-by-step recommendations.
                     </p>
-                    <div class="hero-cta">
-                        <button class="btn btn-primary" id="get-started-btn">
-                            Get Started
-                            <svg class="btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                            </svg>
-                        </button>
-                        <button class="btn btn-secondary" id="learn-more-btn">Learn More</button>
-                    </div>
                 </div>
-                <div class="hero-visual" aria-hidden="true">
-                    <div class="floating-card card-1">
-                        <span class="card-emoji">🎯</span>
-                        <span class="card-text">Set Goals</span>
+            </div>
+        </section>
+
+        <!-- Course Path Generator Section -->
+        <section class="section generator-section" id="generator">
+            <div class="container">
+                <div class="generator-container">
+                    <!-- Input Area -->
+                    <div class="input-section">
+                        <label for="student-plan" class="input-label">
+                            <span class="label-icon">💭</span>
+                            <span class="label-text">Type your current plan</span>
+                        </label>
+                        <textarea 
+                            id="student-plan" 
+                            class="plan-textarea" 
+                            placeholder="Tell us about your interests, strengths, and diploma preferences...&#10;&#10;Example: I'm interested in technology and design. I did well in Maths and Art. I'm considering Information Technology or Digital Media Design diplomas..."
+                            rows="6"
+                            aria-describedby="plan-hint"
+                        ></textarea>
+                        <p id="plan-hint" class="input-hint">
+                            Share your academic strengths, interests, and potential diploma choices
+                        </p>
+                        <button class="btn btn-primary btn-generate" id="generate-btn" disabled>
+                            <svg class="btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                            </svg>
+                            Generate My Path
+                        </button>
                     </div>
-                    <div class="floating-card card-2">
-                        <span class="card-emoji">📚</span>
-                        <span class="card-text">Study Smart</span>
+
+                    <!-- Course Path Display -->
+                    <div class="path-display" id="path-display" style="display: none;">
+                        <div class="path-header">
+                            <h2 class="path-title">Your Personalized Course Path</h2>
+                            <div class="path-actions">
+                                <button class="btn btn-outline btn-sm" id="download-pdf-btn">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Download PDF
+                                </button>
+                                <button class="btn btn-secondary btn-sm" id="reset-btn">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Start Over
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Avatar Progress -->
+                        <div class="avatar-section">
+                            <div class="avatar-track">
+                                <div class="avatar-character" id="avatar">
+                                    <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
+                                        <circle cx="25" cy="25" r="24" fill="#6366F1" stroke="white" stroke-width="2"/>
+                                        <circle cx="25" cy="20" r="8" fill="white"/>
+                                        <path d="M10 40c0-8.284 6.716-15 15-15s15 6.716 15 15" fill="white"/>
+                                        <circle cx="20" cy="18" r="2" fill="#6366F1"/>
+                                        <circle cx="30" cy="18" r="2" fill="#6366F1"/>
+                                        <path d="M20 24c1.5 1.5 3.5 1.5 5 0 1.5 1.5 3.5 1.5 5 0" stroke="#6366F1" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <div class="progress-line" id="progress-line"></div>
+                            </div>
+                            <div class="progress-info">
+                                <span class="progress-text">Step <span id="current-step">0</span> of <span id="total-steps">0</span></span>
+                                <span class="progress-percent"><span id="progress-percentage">0</span>% Complete</span>
+                            </div>
+                        </div>
+
+                        <!-- Course Path Steps -->
+                        <div class="course-path" id="course-path">
+                            <!-- Steps will be dynamically generated here -->
+                        </div>
                     </div>
-                    <div class="floating-card card-3">
-                        <span class="card-emoji">🌟</span>
-                        <span class="card-text">Stay Motivated</span>
+
+                    <!-- Chatbot Interface -->
+                    <div class="chatbot-container" id="chatbot" style="display: none;">
+                        <div class="chatbot-header">
+                            <div class="chatbot-avatar">🤖</div>
+                            <div class="chatbot-info">
+                                <h3 class="chatbot-name">Course Path Assistant</h3>
+                                <p class="chatbot-status">Online</p>
+                            </div>
+                            <button class="chatbot-toggle" id="chatbot-toggle" aria-label="Minimize chatbot">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="chatbot-messages" id="chatbot-messages">
+                            <div class="message bot-message">
+                                <div class="message-avatar">🤖</div>
+                                <div class="message-content">
+                                    <p>Hi! I'm analyzing your plan and creating a personalized course path for you. Feel free to ask me any questions!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chatbot-input">
+                            <input 
+                                type="text" 
+                                id="chatbot-input-field" 
+                                class="chatbot-field" 
+                                placeholder="Ask about your course path..."
+                                aria-label="Chat message"
+                            />
+                            <button class="btn-send" id="send-message-btn" aria-label="Send message">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Daily Motivation Section -->
-        <section class="section motivation-section" id="motivation">
+        <section class="section motivation-section" id="motivation" style="display: none;">
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title">Daily Motivation</h2>
@@ -122,8 +214,47 @@
             </div>
         </section>
 
+        <!-- How It Works Section -->
+        <section class="section how-it-works-section" id="how-it-works">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">How It Works</h2>
+                    <p class="section-subtitle">Your personalized path in three simple steps</p>
+                </div>
+                
+                <div class="steps-grid">
+                    <article class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-icon" aria-hidden="true">✍️</div>
+                        <h3 class="step-title">Share Your Plan</h3>
+                        <p class="step-description">
+                            Tell us about your interests, academic strengths, and diploma preferences. The more details you share, the better your personalized path.
+                        </p>
+                    </article>
+                    
+                    <article class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-icon" aria-hidden="true">🤖</div>
+                        <h3 class="step-title">AI Analysis</h3>
+                        <p class="step-description">
+                            Our intelligent system analyzes your input and creates a step-by-step course path tailored to your goals and strengths.
+                        </p>
+                    </article>
+                    
+                    <article class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-icon" aria-hidden="true">📄</div>
+                        <h3 class="step-title">Download & Follow</h3>
+                        <p class="step-description">
+                            Get your personalized path as a PDF guide. Track your progress with our interactive avatar and chatbot support.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
         <!-- Study Tips Section -->
-        <section class="section study-tips-section" id="study-tips">
+        <section class="section study-tips-section" id="study-tips" style="display: none;">
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title">Study Tips & Strategies</h2>
@@ -189,7 +320,7 @@
         </section>
 
         <!-- Preparation Checklist Section -->
-        <section class="section checklist-section" id="checklist">
+        <section class="section checklist-section" id="checklist" style="display: none;">
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title">Your Preparation Checklist</h2>
@@ -333,9 +464,9 @@
                         <h4 class="footer-heading">Quick Links</h4>
                         <ul role="list">
                             <li><a href="#home">Home</a></li>
-                            <li><a href="#motivation">Motivation</a></li>
-                            <li><a href="#study-tips">Study Tips</a></li>
-                            <li><a href="#checklist">Checklist</a></li>
+                            <li><a href="#generator">Generate Path</a></li>
+                            <li><a href="#how-it-works">How It Works</a></li>
+                            <li><a href="#resources">Resources</a></li>
                         </ul>
                     </div>
                     

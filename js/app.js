@@ -1,83 +1,576 @@
 /**
- * PolyMotivator - Main Application
- * Interactive features for student motivation and study guidance
+ * PolyMotivator - AI Course Path Generator
+ * Interactive chatbot and personalized course path generation
  */
 
 // ===================================
 // State Management
 // ===================================
 const AppState = {
-    checklistItems: [],
-    currentMotivation: 0,
-    progressPercentage: 0,
-    userPreferences: {}
+    userPlan: '',
+    coursePath: [],
+    currentStep: 0,
+    chatMessages: [],
+    isGenerating: false
 };
 
 // ===================================
-// Motivation Quotes Database
+// Course Path Templates
 // ===================================
-const motivationQuotes = [
-    {
-        text: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-        author: "Winston Churchill"
-    },
-    {
-        text: "The future belongs to those who believe in the beauty of their dreams.",
-        author: "Eleanor Roosevelt"
-    },
-    {
-        text: "Believe you can and you're halfway there.",
-        author: "Theodore Roosevelt"
-    },
-    {
-        text: "Don't watch the clock; do what it does. Keep going.",
-        author: "Sam Levenson"
-    },
-    {
-        text: "The only way to do great work is to love what you do.",
-        author: "Steve Jobs"
-    },
-    {
-        text: "Education is the most powerful weapon which you can use to change the world.",
-        author: "Nelson Mandela"
-    },
-    {
-        text: "The expert in anything was once a beginner.",
-        author: "Helen Hayes"
-    },
-    {
-        text: "You are never too old to set another goal or to dream a new dream.",
-        author: "C.S. Lewis"
-    },
-    {
-        text: "Success is the sum of small efforts repeated day in and day out.",
-        author: "Robert Collier"
-    },
-    {
-        text: "Your limitation—it's only your imagination.",
-        author: "Anonymous"
-    },
-    {
-        text: "Push yourself, because no one else is going to do it for you.",
-        author: "Anonymous"
-    },
-    {
-        text: "Great things never come from comfort zones.",
-        author: "Anonymous"
-    },
-    {
-        text: "Dream it. Wish it. Do it.",
-        author: "Anonymous"
-    },
-    {
-        text: "Study while others are sleeping; work while others are loafing; prepare while others are playing.",
-        author: "William A. Ward"
-    },
-    {
-        text: "The secret of getting ahead is getting started.",
-        author: "Mark Twain"
+const coursePathTemplates = {
+    technology: [
+        {
+            title: "Foundation: Strengthen Your Technical Skills",
+            description: "Focus on building a strong foundation in Mathematics and Science. These subjects are crucial for technology-related diplomas.",
+            tags: ["Mathematics", "Science", "Computer Skills"]
+        },
+        {
+            title: "Explore Programming Basics",
+            description: "Start learning basic programming concepts through online platforms like Code.org or Scratch. This will give you a head start in IT courses.",
+            tags: ["Programming", "Logic", "Problem Solving"]
+        },
+        {
+            title: "Research Your Diploma Options",
+            description: "Investigate Information Technology, Infocomm Security Management, or Cybersecurity & Digital Forensics diplomas based on your specific interests.",
+            tags: ["Research", "Career Planning"]
+        },
+        {
+            title: "Build a Portfolio",
+            description: "Create small projects or participate in hackathons to demonstrate your passion and skills. This strengthens your application.",
+            tags: ["Projects", "Portfolio", "Experience"]
+        },
+        {
+            title: "Connect with Current Students",
+            description: "Reach out to current polytechnic students through open houses or social media to learn about their experiences.",
+            tags: ["Networking", "Mentorship"]
+        },
+        {
+            title: "Prepare for Interviews",
+            description: "Some courses may require interviews. Practice articulating your interest in technology and showcase your projects.",
+            tags: ["Interview Skills", "Communication"]
+        }
+    ],
+    business: [
+        {
+            title: "Foundation: Excel in Key Subjects",
+            description: "Focus on subjects like Mathematics, English, and Principles of Accounts if available. These are important for business diplomas.",
+            tags: ["Mathematics", "English", "Accounts"]
+        },
+        {
+            title: "Develop Business Awareness",
+            description: "Read business news, follow successful entrepreneurs, and understand current market trends to build your business acumen.",
+            tags: ["Business Knowledge", "Current Affairs"]
+        },
+        {
+            title: "Research Diploma Specializations",
+            description: "Explore options like Business Administration, Marketing, Banking & Finance, or Accountancy based on your strengths.",
+            tags: ["Research", "Specializations"]
+        },
+        {
+            title: "Gain Practical Experience",
+            description: "Participate in school entrepreneurship programs or start a small business project to demonstrate initiative.",
+            tags: ["Entrepreneurship", "Experience"]
+        },
+        {
+            title: "Build Communication Skills",
+            description: "Join debate clubs or public speaking groups to enhance your presentation and interpersonal skills.",
+            tags: ["Communication", "Leadership"]
+        },
+        {
+            title: "Prepare Application Materials",
+            description: "Craft a compelling personal statement highlighting your business interests and relevant experiences.",
+            tags: ["Application", "Personal Statement"]
+        }
+    ],
+    design: [
+        {
+            title: "Foundation: Strengthen Creative Subjects",
+            description: "Excel in Art, Design & Technology subjects. Build a strong foundation in visual communication and design principles.",
+            tags: ["Art", "Design", "Creativity"]
+        },
+        {
+            title: "Build Your Portfolio",
+            description: "Create a diverse portfolio showcasing your best work across different mediums - digital art, sketches, designs, and projects.",
+            tags: ["Portfolio", "Artwork", "Projects"]
+        },
+        {
+            title: "Learn Design Software",
+            description: "Familiarize yourself with industry-standard tools like Adobe Creative Suite (Photoshop, Illustrator) through free tutorials.",
+            tags: ["Software", "Digital Skills"]
+        },
+        {
+            title: "Research Design Diplomas",
+            description: "Explore Visual Communication, Interior Design, Product Design, or Digital Media Design based on your interests.",
+            tags: ["Research", "Specializations"]
+        },
+        {
+            title: "Follow Design Trends",
+            description: "Stay updated with current design trends, attend exhibitions, and follow influential designers for inspiration.",
+            tags: ["Inspiration", "Industry Knowledge"]
+        },
+        {
+            title: "Prepare for Portfolio Review",
+            description: "Many design courses require portfolio submissions. Curate your best work and be ready to explain your creative process.",
+            tags: ["Portfolio Review", "Presentation"]
+        }
+    ],
+    healthcare: [
+        {
+            title: "Foundation: Excel in Sciences",
+            description: "Focus heavily on Biology, Chemistry, and Mathematics. These subjects are essential for healthcare-related diplomas.",
+            tags: ["Biology", "Chemistry", "Sciences"]
+        },
+        {
+            title: "Understand Healthcare Careers",
+            description: "Research different healthcare roles - nursing, biomedical science, pharmaceutical science - to find your fit.",
+            tags: ["Career Research", "Healthcare"]
+        },
+        {
+            title: "Volunteer in Healthcare Settings",
+            description: "Gain exposure through volunteering at hospitals, nursing homes, or community health programs.",
+            tags: ["Volunteering", "Experience"]
+        },
+        {
+            title: "Develop Empathy and Communication",
+            description: "Healthcare requires strong interpersonal skills. Practice active listening and compassionate communication.",
+            tags: ["Soft Skills", "Empathy"]
+        },
+        {
+            title: "Prepare for Aptitude Tests",
+            description: "Some healthcare courses may require additional assessments. Practice aptitude tests and interview scenarios.",
+            tags: ["Tests", "Preparation"]
+        },
+        {
+            title: "Understand Course Requirements",
+            description: "Review specific entry requirements, including minimum grades and preferred subject combinations for your target diploma.",
+            tags: ["Requirements", "Planning"]
+        }
+    ],
+    engineering: [
+        {
+            title: "Foundation: Master STEM Subjects",
+            description: "Excel in Mathematics, Physics, and Chemistry. Strong analytical and problem-solving skills are crucial.",
+            tags: ["Mathematics", "Physics", "STEM"]
+        },
+        {
+            title: "Hands-On Project Experience",
+            description: "Participate in robotics clubs, engineering competitions, or DIY projects to demonstrate practical skills.",
+            tags: ["Projects", "Hands-on", "Competitions"]
+        },
+        {
+            title: "Research Engineering Branches",
+            description: "Explore Mechanical, Electrical, Aerospace, or Biomedical Engineering based on your specific interests.",
+            tags: ["Research", "Specializations"]
+        },
+        {
+            title: "Develop Technical Drawing Skills",
+            description: "Learn basic CAD software or technical drawing. This will be valuable for engineering courses.",
+            tags: ["CAD", "Technical Skills"]
+        },
+        {
+            title: "Understand Industry Applications",
+            description: "Visit industry talks, attend engineering exhibitions, and understand real-world applications of engineering.",
+            tags: ["Industry", "Applications"]
+        },
+        {
+            title: "Prepare Your Application",
+            description: "Highlight your STEM achievements, project work, and genuine passion for engineering in your application.",
+            tags: ["Application", "Achievements"]
+        }
+    ]
+};
+
+// ===================================
+// AI Course Path Generator
+// ===================================
+const CoursePathGenerator = {
+    generatePath(userInput) {
+        // Analyze user input to determine best path template
+        const input = userInput.toLowerCase();
+        let selectedPath = [];
+        
+        // Simple keyword matching (in production, this would use actual AI/ML)
+        if (input.includes('technology') || input.includes('it') || input.includes('computer') || 
+            input.includes('programming') || input.includes('software') || input.includes('cyber')) {
+            selectedPath = coursePathTemplates.technology;
+        } else if (input.includes('business') || input.includes('marketing') || input.includes('finance') || 
+                   input.includes('accounting') || input.includes('entrepreneur')) {
+            selectedPath = coursePathTemplates.business;
+        } else if (input.includes('design') || input.includes('art') || input.includes('creative') || 
+                   input.includes('media') || input.includes('visual')) {
+            selectedPath = coursePathTemplates.design;
+        } else if (input.includes('health') || input.includes('nursing') || input.includes('medical') || 
+                   input.includes('biomedical') || input.includes('pharmaceutical')) {
+            selectedPath = coursePathTemplates.healthcare;
+        } else if (input.includes('engineering') || input.includes('mechanical') || input.includes('electrical') || 
+                   input.includes('aerospace') || input.includes('robotics')) {
+            selectedPath = coursePathTemplates.engineering;
+        } else {
+            // Default to general technology path
+            selectedPath = coursePathTemplates.technology;
+        }
+        
+        // Personalize the path based on user input
+        return selectedPath.map((step, index) => ({
+            ...step,
+            stepNumber: index + 1,
+            status: index === 0 ? 'active' : 'pending'
+        }));
     }
-];
+};
+
+// ===================================
+// PDF Generator
+// ===================================
+const PDFGenerator = {
+    async downloadPDF() {
+        // Create PDF content
+        const pdfContent = this.createPDFContent();
+        
+        // In production, use a library like jsPDF or pdfmake
+        // For now, create a simple text download
+        const blob = new Blob([pdfContent], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'my-course-path.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        // Show success message in chatbot
+        Chatbot.addMessage('bot', 'Your course path has been downloaded! Check your downloads folder.');
+    },
+    
+    createPDFContent() {
+        let content = '='.repeat(60) + '\n';
+        content += '           POLYMOTIVATOR - YOUR PERSONALIZED COURSE PATH\n';
+        content += '='.repeat(60) + '\n\n';
+        content += `Generated on: ${new Date().toLocaleDateString()}\n\n`;
+        content += 'YOUR PLAN:\n';
+        content += '-'.repeat(60) + '\n';
+        content += AppState.userPlan + '\n\n';
+        content += 'RECOMMENDED COURSE PATH:\n';
+        content += '-'.repeat(60) + '\n\n';
+        
+        AppState.coursePath.forEach((step, index) => {
+            content += `STEP ${step.stepNumber}: ${step.title}\n`;
+            content += `${step.description}\n`;
+            content += `Focus Areas: ${step.tags.join(', ')}\n\n`;
+        });
+        
+        content += '='.repeat(60) + '\n';
+        content += 'Good luck on your polytechnic journey!\n';
+        content += 'Visit PolyMotivator for more resources and support.\n';
+        content += '='.repeat(60) + '\n';
+        
+        return content;
+    }
+};
+
+// ===================================
+// Chatbot Module
+// ===================================
+const Chatbot = {
+    init() {
+        this.messagesContainer = document.getElementById('chatbot-messages');
+        this.inputField = document.getElementById('chatbot-input-field');
+        this.sendBtn = document.getElementById('send-message-btn');
+        this.toggleBtn = document.getElementById('chatbot-toggle');
+        this.container = document.getElementById('chatbot');
+        
+        this.bindEvents();
+    },
+    
+    bindEvents() {
+        this.sendBtn?.addEventListener('click', () => this.sendMessage());
+        this.inputField?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.sendMessage();
+        });
+        this.toggleBtn?.addEventListener('click', () => this.toggleChat());
+    },
+    
+    show() {
+        if (this.container) {
+            this.container.style.display = 'block';
+        }
+    },
+    
+    toggleChat() {
+        this.container?.classList.toggle('minimized');
+    },
+    
+    addMessage(type, text) {
+        if (!this.messagesContainer) return;
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}-message`;
+        
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        avatar.textContent = type === 'bot' ? '🤖' : '👤';
+        
+        const content = document.createElement('div');
+        content.className = 'message-content';
+        
+        const p = document.createElement('p');
+        p.textContent = text;
+        content.appendChild(p);
+        
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(content);
+        
+        this.messagesContainer.appendChild(messageDiv);
+        this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+        
+        AppState.chatMessages.push({ type, text, timestamp: Date.now() });
+    },
+    
+    sendMessage() {
+        const message = this.inputField?.value.trim();
+        if (!message) return;
+        
+        this.addMessage('user', message);
+        this.inputField.value = '';
+        
+        // Simulate bot response
+        setTimeout(() => {
+            const response = this.generateResponse(message);
+            this.addMessage('bot', response);
+        }, 800);
+    },
+    
+    generateResponse(userMessage) {
+        const msg = userMessage.toLowerCase();
+        
+        if (msg.includes('hello') || msg.includes('hi')) {
+            return "Hello! I'm here to help you with your course path. Feel free to ask any questions!";
+        } else if (msg.includes('diploma') || msg.includes('course')) {
+            return "Your recommended path includes specific steps tailored to your chosen diploma. Check the steps above for detailed guidance!";
+        } else if (msg.includes('help') || msg.includes('what can')) {
+            return "I can help you understand your course path, answer questions about polytechnic preparation, and provide guidance on next steps. What would you like to know?";
+        } else if (msg.includes('pdf') || msg.includes('download')) {
+            return "You can download your personalized course path as a PDF using the 'Download PDF' button above!";
+        } else if (msg.includes('change') || msg.includes('different')) {
+            return "To create a different path, click the 'Start Over' button and describe your new plan!";
+        } else if (msg.includes('thank')) {
+            return "You're welcome! I'm here to support your polytechnic journey. Keep moving forward! 💪";
+        } else {
+            return "That's a great question! Based on your course path, I'd recommend focusing on the current step and building those specific skills. Would you like more details about any particular step?";
+        }
+    }
+};
+
+// ===================================
+// Path Display Module
+// ===================================
+const PathDisplay = {
+    init() {
+        this.container = document.getElementById('path-display');
+        this.pathContainer = document.getElementById('course-path');
+        this.downloadBtn = document.getElementById('download-pdf-btn');
+        this.resetBtn = document.getElementById('reset-btn');
+        this.avatar = document.getElementById('avatar');
+        this.progressLine = document.getElementById('progress-line');
+        this.currentStepEl = document.getElementById('current-step');
+        this.totalStepsEl = document.getElementById('total-steps');
+        this.progressPercentageEl = document.getElementById('progress-percentage');
+        
+        this.bindEvents();
+    },
+    
+    bindEvents() {
+        this.downloadBtn?.addEventListener('click', () => PDFGenerator.downloadPDF());
+        this.resetBtn?.addEventListener('click', () => this.reset());
+    },
+    
+    show() {
+        if (this.container) {
+            this.container.style.display = 'block';
+        }
+    },
+    
+    hide() {
+        if (this.container) {
+            this.container.style.display = 'none';
+        }
+    },
+    
+    renderPath(steps) {
+        if (!this.pathContainer) return;
+        
+        this.pathContainer.innerHTML = '';
+        
+        steps.forEach((step, index) => {
+            const stepEl = document.createElement('div');
+            stepEl.className = `path-step ${step.status}`;
+            stepEl.dataset.stepIndex = index;
+            
+            const header = document.createElement('div');
+            header.className = 'step-header';
+            
+            const badge = document.createElement('div');
+            badge.className = 'step-badge';
+            badge.textContent = step.stepNumber;
+            
+            const title = document.createElement('h3');
+            title.className = 'step-title-text';
+            title.textContent = step.title;
+            
+            header.appendChild(badge);
+            header.appendChild(title);
+            
+            const description = document.createElement('p');
+            description.className = 'step-description';
+            description.textContent = step.description;
+            
+            const details = document.createElement('div');
+            details.className = 'step-details';
+            
+            step.tags.forEach(tag => {
+                const tagEl = document.createElement('span');
+                tagEl.className = 'step-tag';
+                tagEl.textContent = tag;
+                details.appendChild(tagEl);
+            });
+            
+            stepEl.appendChild(header);
+            stepEl.appendChild(description);
+            stepEl.appendChild(details);
+            
+            // Add click handler to mark as completed
+            stepEl.addEventListener('click', () => this.toggleStepComplete(index));
+            
+            this.pathContainer.appendChild(stepEl);
+        });
+        
+        this.updateProgress();
+    },
+    
+    toggleStepComplete(index) {
+        const step = AppState.coursePath[index];
+        if (step.status === 'pending') {
+            step.status = 'completed';
+        } else if (step.status === 'completed') {
+            step.status = 'pending';
+        } else if (step.status === 'active') {
+            step.status = 'completed';
+            // Move to next step
+            if (index + 1 < AppState.coursePath.length) {
+                AppState.coursePath[index + 1].status = 'active';
+            }
+        }
+        
+        this.renderPath(AppState.coursePath);
+        Chatbot.addMessage('bot', `Great work! You've marked "${step.title}" as ${step.status}. Keep going! 🎉`);
+    },
+    
+    updateProgress() {
+        const total = AppState.coursePath.length;
+        const completed = AppState.coursePath.filter(s => s.status === 'completed').length;
+        const percentage = Math.round((completed / total) * 100);
+        
+        if (this.currentStepEl) this.currentStepEl.textContent = completed;
+        if (this.totalStepsEl) this.totalStepsEl.textContent = total;
+        if (this.progressPercentageEl) this.progressPercentageEl.textContent = percentage;
+        
+        // Update avatar position
+        const position = (completed / total) * 100;
+        if (this.avatar) {
+            this.avatar.style.left = `${position}%`;
+        }
+        
+        // Update progress line
+        if (this.progressLine) {
+            const line = this.progressLine.querySelector('::after') || this.progressLine;
+            this.progressLine.style.setProperty('--progress-width', `${position}%`);
+        }
+    },
+    
+    reset() {
+        if (confirm('Are you sure you want to start over? This will clear your current course path.')) {
+            this.hide();
+            Chatbot.container.style.display = 'none';
+            document.getElementById('student-plan').value = '';
+            document.getElementById('generate-btn').disabled = true;
+            AppState.coursePath = [];
+            AppState.userPlan = '';
+            AppState.currentStep = 0;
+        }
+    }
+};
+
+// Add CSS variable support for progress line
+const style = document.createElement('style');
+style.textContent = `
+    .progress-line::after {
+        width: var(--progress-width, 0%) !important;
+    }
+`;
+document.head.appendChild(style);
+
+// ===================================
+// Input Handler Module
+// ===================================
+const InputHandler = {
+    init() {
+        this.textarea = document.getElementById('student-plan');
+        this.generateBtn = document.getElementById('generate-btn');
+        
+        this.bindEvents();
+    },
+    
+    bindEvents() {
+        this.textarea?.addEventListener('input', () => this.handleInput());
+        this.generateBtn?.addEventListener('click', () => this.generatePath());
+    },
+    
+    handleInput() {
+        const value = this.textarea?.value.trim();
+        if (this.generateBtn) {
+            this.generateBtn.disabled = !value || value.length < 20;
+        }
+    },
+    
+    async generatePath() {
+        const userPlan = this.textarea?.value.trim();
+        if (!userPlan) return;
+        
+        AppState.userPlan = userPlan;
+        AppState.isGenerating = true;
+        
+        // Show loading state
+        if (this.generateBtn) {
+            this.generateBtn.textContent = 'Generating...';
+            this.generateBtn.disabled = true;
+        }
+        
+        // Simulate AI processing delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Generate course path
+        AppState.coursePath = CoursePathGenerator.generatePath(userPlan);
+        
+        // Display results
+        PathDisplay.show();
+        PathDisplay.renderPath(AppState.coursePath);
+        
+        // Show chatbot
+        Chatbot.show();
+        Chatbot.addMessage('bot', `I've analyzed your plan and created a personalized ${AppState.coursePath.length}-step course path for you! Click on any step to mark it as complete.`);
+        
+        // Scroll to results
+        document.getElementById('path-display')?.scrollIntoView({ behavior: 'smooth' });
+        
+        // Reset button
+        if (this.generateBtn) {
+            this.generateBtn.textContent = 'Generate My Path';
+        }
+        
+        AppState.isGenerating = false;
+    }
+};
 
 // ===================================
 // Utility Functions
@@ -208,334 +701,6 @@ const Navigation = {
 };
 
 // ===================================
-// Motivation Module
-// ===================================
-const Motivation = {
-    init() {
-        this.quoteText = document.getElementById('motivation-text');
-        this.quoteAuthor = document.querySelector('.quote-author');
-        this.newQuoteBtn = document.getElementById('new-motivation-btn');
-        
-        this.loadQuote();
-        this.bindEvents();
-    },
-    
-    bindEvents() {
-        this.newQuoteBtn?.addEventListener('click', () => this.changeQuote());
-    },
-    
-    loadQuote() {
-        const savedQuote = loadFromStorage('currentQuote');
-        if (savedQuote) {
-            this.displayQuote(savedQuote);
-        } else {
-            this.changeQuote();
-        }
-    },
-    
-    changeQuote() {
-        const quote = getRandomItem(motivationQuotes);
-        this.displayQuote(quote);
-        saveToStorage('currentQuote', quote);
-        
-        // Add animation
-        this.quoteText.style.animation = 'none';
-        setTimeout(() => {
-            this.quoteText.style.animation = 'fadeIn 0.6s ease-out forwards';
-        }, 10);
-    },
-    
-    displayQuote(quote) {
-        if (this.quoteText && this.quoteAuthor) {
-            this.quoteText.textContent = `"${quote.text}"`;
-            this.quoteAuthor.textContent = `— ${quote.author}`;
-        }
-    }
-};
-
-// ===================================
-// Checklist Module
-// ===================================
-const Checklist = {
-    init() {
-        this.checkboxes = document.querySelectorAll('.checklist-checkbox');
-        this.progressRing = document.querySelector('.progress-ring-fill');
-        this.progressPercentage = document.querySelector('.progress-percentage');
-        this.progressMessage = document.querySelector('.progress-message');
-        this.resetBtn = document.getElementById('reset-checklist-btn');
-        
-        this.loadProgress();
-        this.bindEvents();
-        this.updateProgress();
-    },
-    
-    bindEvents() {
-        this.checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-                this.saveProgress();
-                this.updateProgress();
-            });
-        });
-        
-        this.resetBtn?.addEventListener('click', () => this.resetProgress());
-    },
-    
-    loadProgress() {
-        const savedProgress = loadFromStorage('checklistProgress');
-        if (savedProgress) {
-            this.checkboxes.forEach((checkbox, index) => {
-                checkbox.checked = savedProgress[index] || false;
-            });
-        }
-    },
-    
-    saveProgress() {
-        const progress = Array.from(this.checkboxes).map(cb => cb.checked);
-        saveToStorage('checklistProgress', progress);
-    },
-    
-    updateProgress() {
-        const total = this.checkboxes.length;
-        const completed = Array.from(this.checkboxes).filter(cb => cb.checked).length;
-        const percentage = Math.round((completed / total) * 100);
-        
-        // Update percentage text
-        if (this.progressPercentage) {
-            this.progressPercentage.textContent = `${percentage}%`;
-        }
-        
-        // Update progress ring
-        if (this.progressRing) {
-            const circumference = 2 * Math.PI * 52; // radius = 52
-            const offset = circumference - (percentage / 100) * circumference;
-            this.progressRing.style.strokeDashoffset = offset;
-        }
-        
-        // Update progress bar aria
-        const progressCircle = document.querySelector('.progress-circle');
-        if (progressCircle) {
-            progressCircle.setAttribute('aria-valuenow', percentage);
-        }
-        
-        // Update motivational message
-        this.updateMessage(percentage, completed, total);
-    },
-    
-    updateMessage(percentage, completed, total) {
-        if (!this.progressMessage) return;
-        
-        let message;
-        if (percentage === 0) {
-            message = "Let's get started on your journey! 🚀";
-        } else if (percentage < 25) {
-            message = "Great start! Keep the momentum going! 💪";
-        } else if (percentage < 50) {
-            message = "You're making excellent progress! 🌟";
-        } else if (percentage < 75) {
-            message = "More than halfway there! Keep pushing! 🎯";
-        } else if (percentage < 100) {
-            message = "Almost there! You've got this! 🔥";
-        } else {
-            message = "Congratulations! You're fully prepared! 🎉";
-        }
-        
-        this.progressMessage.textContent = message;
-    },
-    
-    resetProgress() {
-        if (confirm('Are you sure you want to reset your progress?')) {
-            this.checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            this.saveProgress();
-            this.updateProgress();
-        }
-    }
-};
-
-// ===================================
-// Scroll Animations Module
-// ===================================
-const ScrollAnimations = {
-    init() {
-        this.observeElements();
-    },
-    
-    observeElements() {
-        // Only animate if user prefers motion
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReducedMotion) return;
-        
-        const options = {
-            root: null,
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('fade-in');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, options);
-        
-        // Observe elements
-        const elementsToAnimate = document.querySelectorAll(
-            '.tip-card, .resource-card, .motivation-card, .checklist-item'
-        );
-        
-        elementsToAnimate.forEach(el => {
-            observer.observe(el);
-        });
-    }
-};
-
-// ===================================
-// Hero CTA Module
-// ===================================
-const HeroCTA = {
-    init() {
-        this.getStartedBtn = document.getElementById('get-started-btn');
-        this.learnMoreBtn = document.getElementById('learn-more-btn');
-        
-        this.bindEvents();
-    },
-    
-    bindEvents() {
-        this.getStartedBtn?.addEventListener('click', () => {
-            this.scrollToSection('#checklist');
-        });
-        
-        this.learnMoreBtn?.addEventListener('click', () => {
-            this.scrollToSection('#motivation');
-        });
-    },
-    
-    scrollToSection(selector) {
-        const section = document.querySelector(selector);
-        if (section) {
-            section.scrollIntoView({ behavior: 'smooth' });
-        }
-    }
-};
-
-// ===================================
-// Performance Optimization
-// ===================================
-const Performance = {
-    init() {
-        // Lazy load images if needed
-        this.lazyLoadImages();
-        
-        // Prefetch on hover for better perceived performance
-        this.prefetchOnHover();
-    },
-    
-    lazyLoadImages() {
-        if ('loading' in HTMLImageElement.prototype) {
-            const images = document.querySelectorAll('img[loading="lazy"]');
-            images.forEach(img => {
-                img.src = img.dataset.src;
-            });
-        } else {
-            // Fallback for browsers that don't support lazy loading
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
-            document.body.appendChild(script);
-        }
-    },
-    
-    prefetchOnHover() {
-        const links = document.querySelectorAll('a[href^="#"]');
-        links.forEach(link => {
-            link.addEventListener('mouseenter', function() {
-                const href = this.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    // Prefetch section content
-                    const section = document.querySelector(href);
-                    if (section) {
-                        // Trigger any lazy-loaded content in that section
-                        section.classList.add('preloaded');
-                    }
-                }
-            }, { once: true });
-        });
-    }
-};
-
-// ===================================
-// Accessibility Enhancements
-// ===================================
-const Accessibility = {
-    init() {
-        this.handleKeyboardNav();
-        this.announceChanges();
-    },
-    
-    handleKeyboardNav() {
-        // Escape key to close mobile menu
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                const navMenu = document.querySelector('.nav-menu.active');
-                if (navMenu) {
-                    Navigation.closeMenu();
-                }
-            }
-        });
-        
-        // Tab trap in mobile menu when open
-        const navMenu = document.querySelector('.nav-menu');
-        const focusableElements = navMenu?.querySelectorAll(
-            'a[href], button:not([disabled])'
-        );
-        
-        if (focusableElements && focusableElements.length > 0) {
-            const firstElement = focusableElements[0];
-            const lastElement = focusableElements[focusableElements.length - 1];
-            
-            navMenu.addEventListener('keydown', (e) => {
-                if (e.key === 'Tab' && navMenu.classList.contains('active')) {
-                    if (e.shiftKey && document.activeElement === firstElement) {
-                        e.preventDefault();
-                        lastElement.focus();
-                    } else if (!e.shiftKey && document.activeElement === lastElement) {
-                        e.preventDefault();
-                        firstElement.focus();
-                    }
-                }
-            });
-        }
-    },
-    
-    announceChanges() {
-        // Create live region for screen readers
-        const liveRegion = document.createElement('div');
-        liveRegion.setAttribute('role', 'status');
-        liveRegion.setAttribute('aria-live', 'polite');
-        liveRegion.setAttribute('aria-atomic', 'true');
-        liveRegion.className = 'sr-only';
-        liveRegion.style.position = 'absolute';
-        liveRegion.style.left = '-10000px';
-        liveRegion.style.width = '1px';
-        liveRegion.style.height = '1px';
-        liveRegion.style.overflow = 'hidden';
-        document.body.appendChild(liveRegion);
-        
-        // Announce checklist updates
-        const checkboxes = document.querySelectorAll('.checklist-checkbox');
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', (e) => {
-                const label = e.target.nextElementSibling.querySelector('.checklist-text').textContent;
-                const status = e.target.checked ? 'completed' : 'uncompleted';
-                liveRegion.textContent = `${label} marked as ${status}`;
-            });
-        });
-    }
-};
-
-// ===================================
 // Application Initialization
 // ===================================
 function initApp() {
@@ -550,14 +715,13 @@ function initApp() {
 function init() {
     // Initialize all modules
     Navigation.init();
-    Motivation.init();
-    Checklist.init();
-    HeroCTA.init();
+    InputHandler.init();
+    PathDisplay.init();
+    Chatbot.init();
     ScrollAnimations.init();
-    Performance.init();
     Accessibility.init();
     
-    console.log('PolyMotivator initialized successfully! 🚀');
+    console.log('PolyMotivator Course Path Generator initialized! 🚀');
 }
 
 // Start the application
@@ -569,8 +733,9 @@ initApp();
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         Navigation,
-        Motivation,
-        Checklist,
+        CoursePathGenerator,
+        Chatbot,
+        PathDisplay,
         AppState
     };
 }
