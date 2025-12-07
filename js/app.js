@@ -344,20 +344,39 @@ const Chatbot = {
     generateResponse(userMessage) {
         const msg = userMessage.toLowerCase();
         
+        // Get current active step for context
+        const activeStep = AppState.coursePath.find(s => s.status === 'active');
+        const activeStepNum = activeStep ? activeStep.stepNumber : 0;
+        
         if (msg.includes('hello') || msg.includes('hi')) {
-            return "Hello! I'm here to help you with your course path. Feel free to ask any questions!";
+            return "Hello! I'm walking this journey with you, one step at a time. Feel free to ask any questions as we progress together! 🚶";
+        } else if (msg.includes('where') || msg.includes('which step') || msg.includes('current')) {
+            if (activeStep) {
+                return `We're currently at Step ${activeStepNum}: "${activeStep.title}". Take your time with this stage, and click it when you're ready to move forward together! 🚶`;
+            } else {
+                return "We've completed all the steps together! You've walked through your entire course path. Great job! 🎉";
+            }
+        } else if (msg.includes('next') || msg.includes('what\'s next')) {
+            const nextStep = AppState.coursePath.find(s => s.status === 'pending');
+            if (nextStep) {
+                return `After we complete the current step, we'll walk to Step ${nextStep.stepNumber}: "${nextStep.title}". One step at a time! 🚶✨`;
+            } else {
+                return "You're on the final step! Complete it and we'll have walked through your entire journey together! 🎉";
+            }
         } else if (msg.includes('diploma') || msg.includes('course')) {
-            return "Your recommended path includes specific steps tailored to your chosen diploma. Check the steps above for detailed guidance!";
+            return "Your recommended path includes specific steps tailored to your chosen diploma. I'm walking with you through each stage to ensure you're well-prepared!";
         } else if (msg.includes('help') || msg.includes('what can')) {
-            return "I can help you understand your course path, answer questions about polytechnic preparation, and provide guidance on next steps. What would you like to know?";
+            return "I'm your guide on this journey! I'll walk with you through each step of your course path, answer questions, and provide encouragement along the way. What would you like to know? 🚶";
         } else if (msg.includes('pdf') || msg.includes('download')) {
-            return "You can download your personalized course path as a PDF using the 'Download PDF' button above!";
+            return "You can download your personalized course path as a PDF using the 'Download PDF' button above! It's great for keeping track of our journey together. 📄";
         } else if (msg.includes('change') || msg.includes('different')) {
-            return "To create a different path, click the 'Start Over' button and describe your new plan!";
+            return "To create a different path, click the 'Start Over' button and describe your new plan! I'll walk through the new journey with you. 🔄";
         } else if (msg.includes('thank')) {
-            return "You're welcome! I'm here to support your polytechnic journey. Keep moving forward! 💪";
+            return "You're welcome! I'm here to walk alongside you every step of the way. Let's keep moving forward together! 💪🚶";
+        } else if (msg.includes('go back') || msg.includes('previous') || msg.includes('undo')) {
+            return "No problem! You can click on any completed step to revisit it. I'll walk back with you to review that stage. 🚶";
         } else {
-            return "That's a great question! Based on your course path, I'd recommend focusing on the current step and building those specific skills. Would you like more details about any particular step?";
+            return `That's a great question! We're currently walking through your course path together. ${activeStep ? `Focus on Step ${activeStepNum} for now, and I'll guide you to the next stage when you're ready!` : 'Would you like more details about any particular step?'} 🚶✨`;
         }
     }
 };
@@ -450,41 +469,61 @@ const PathDisplay = {
     
     toggleStepComplete(index) {
         const step = AppState.coursePath[index];
+        const previousStatus = step.status;
+        
         if (step.status === 'pending') {
-            step.status = 'completed';
-        } else if (step.status === 'completed') {
-            step.status = 'pending';
+            // Can't mark pending steps - must complete in order
+            Chatbot.addMessage('bot', `Let's complete the current step first! I'm walking with you through each stage of your journey. 🚶`);
+            return;
         } else if (step.status === 'active') {
             step.status = 'completed';
-            // Move to next step
+            
+            // Move avatar to next step
             if (index + 1 < AppState.coursePath.length) {
                 AppState.coursePath[index + 1].status = 'active';
+                const nextStep = AppState.coursePath[index + 1];
+                Chatbot.addMessage('bot', `Excellent! We've completed "${step.title}". Now let's walk together to the next stage: "${nextStep.title}". I'm here to guide you! 🚶✨`);
+            } else {
+                Chatbot.addMessage('bot', `Amazing! We've walked through all the steps together! You've completed your entire course path. You're ready for your polytechnic journey! 🎉🎓`);
             }
+        } else if (step.status === 'completed') {
+            // Allow unchecking to go back
+            step.status = 'active';
+            // Mark all subsequent steps as pending
+            for (let i = index + 1; i < AppState.coursePath.length; i++) {
+                if (AppState.coursePath[i].status !== 'pending') {
+                    AppState.coursePath[i].status = 'pending';
+                }
+            }
+            Chatbot.addMessage('bot', `No problem! Let's revisit "${step.title}" together. I'm walking back with you to this step. 🚶`);
         }
         
         this.renderPath(AppState.coursePath);
-        Chatbot.addMessage('bot', `Great work! You've marked "${step.title}" as ${step.status}. Keep going! 🎉`);
     },
     
     updateProgress() {
         const total = AppState.coursePath.length;
         const completed = AppState.coursePath.filter(s => s.status === 'completed').length;
+        const activeStepIndex = AppState.coursePath.findIndex(s => s.status === 'active');
+        
+        // Progress includes completed steps + current active step position
+        const progressSteps = completed + (activeStepIndex >= 0 ? 0.5 : 0);
         const percentage = Math.round((completed / total) * 100);
         
-        if (this.currentStepEl) this.currentStepEl.textContent = completed;
+        if (this.currentStepEl) this.currentStepEl.textContent = activeStepIndex >= 0 ? activeStepIndex + 1 : completed;
         if (this.totalStepsEl) this.totalStepsEl.textContent = total;
         if (this.progressPercentageEl) this.progressPercentageEl.textContent = percentage;
         
-        // Update avatar position
-        const position = (completed / total) * 100;
+        // Update avatar position to current active step (avatar walks TO the step)
+        const position = activeStepIndex >= 0 ? ((activeStepIndex) / (total - 1)) * 100 : 100;
         if (this.avatar) {
-            this.avatar.style.left = `${position}%`;
+            this.avatar.style.left = `${Math.min(100, Math.max(0, position))}%`;
         }
         
-        // Update progress line
+        // Update progress line to show completed portion
+        const lineProgress = (completed / total) * 100;
         if (this.progressLine) {
-            const line = this.progressLine.querySelector('::after') || this.progressLine;
-            this.progressLine.style.setProperty('--progress-width', `${position}%`);
+            this.progressLine.style.setProperty('--progress-width', `${lineProgress}%`);
         }
     },
     
@@ -558,7 +597,7 @@ const InputHandler = {
         
         // Show chatbot
         Chatbot.show();
-        Chatbot.addMessage('bot', `I've analyzed your plan and created a personalized ${AppState.coursePath.length}-step course path for you! Click on any step to mark it as complete.`);
+        Chatbot.addMessage('bot', `I've analyzed your plan and created a personalized ${AppState.coursePath.length}-step course path for you! I'll walk alongside you through each stage of your journey. Let's start with Step 1! Click on it when you're ready to begin. 🚶✨`);
         
         // Scroll to results
         document.getElementById('path-display')?.scrollIntoView({ behavior: 'smooth' });

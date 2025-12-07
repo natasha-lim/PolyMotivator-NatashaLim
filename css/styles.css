@@ -708,12 +708,14 @@ ul, ol {
     border-left: 4px solid var(--color-gray-400);
     transition: all var(--transition-base);
     opacity: 0.6;
+    cursor: default;
 }
 
 .path-step.completed {
     background-color: rgba(16, 185, 129, 0.1);
     border-left-color: var(--color-secondary);
     opacity: 1;
+    cursor: pointer;
 }
 
 .path-step.active {
@@ -721,6 +723,22 @@ ul, ol {
     border-left-color: var(--color-primary);
     box-shadow: var(--shadow-md);
     opacity: 1;
+    cursor: pointer;
+    position: relative;
+}
+
+.path-step.active::before {
+    content: '👤 You are here';
+    position: absolute;
+    top: -12px;
+    right: var(--spacing-4);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: var(--color-white);
+    padding: var(--spacing-1) var(--spacing-3);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    box-shadow: var(--shadow-md);
 }
 
 .step-header {
