@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PolyMotivator - Keep students focused, confident, and exam-ready with dynamic motivation tips and personalised study guidance">
+    <meta name="keywords" content="polytechnic, motivation, study tips, O-Level, N-Level, ITE, Singapore, exam preparation">
+    <meta name="author" content="PolyMotivator Team">
+    <meta name="theme-color" content="#6366F1">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="PolyMotivator - Your Polytechnic Success Companion">
+    <meta property="og:description" content="Stay focused, confident, and exam-ready with personalized study guidance">
+    <meta property="og:image" content="/assets/og-image.png">
+    
+    <title>PolyMotivator - Stay Focused, Confident & Exam-Ready</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Header -->
+    <header class="header" role="banner">
+        <nav class="nav-container" role="navigation" aria-label="Main navigation">
+            <div class="nav-brand">
+                <svg class="logo" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect width="32" height="32" rx="8" fill="#6366F1"/>
+                    <path d="M16 8L20 12L16 16L12 12L16 8Z" fill="white"/>
+                    <path d="M16 16L20 20L16 24L12 20L16 16Z" fill="#34D399"/>
+                </svg>
+                <span class="brand-name">PolyMotivator</span>
+            </div>
+            
+            <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span class="hamburger"></span>
+            </button>
+            
+            <ul class="nav-menu" role="list">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#motivation" class="nav-link">Motivation</a></li>
+                <li><a href="#study-tips" class="nav-link">Study Tips</a></li>
+                <li><a href="#checklist" class="nav-link">Checklist</a></li>
+                <li><a href="#resources" class="nav-link">Resources</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" role="main">
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Your Journey to <span class="highlight">Polytechnic Success</span> Starts Here
+                    </h1>
+                    <p class="hero-subtitle">
+                        Stay focused, confident, and exam-ready with personalized motivation and study guidance tailored to your diploma pathway.
+                    </p>
+                    <div class="hero-cta">
+                        <button class="btn btn-primary" id="get-started-btn">
+                            Get Started
+                            <svg class="btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <button class="btn btn-secondary" id="learn-more-btn">Learn More</button>
+                    </div>
+                </div>
+                <div class="hero-visual" aria-hidden="true">
+                    <div class="floating-card card-1">
+                        <span class="card-emoji">🎯</span>
+                        <span class="card-text">Set Goals</span>
+                    </div>
+                    <div class="floating-card card-2">
+                        <span class="card-emoji">📚</span>
+                        <span class="card-text">Study Smart</span>
+                    </div>
+                    <div class="floating-card card-3">
+                        <span class="card-emoji">🌟</span>
+                        <span class="card-text">Stay Motivated</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Daily Motivation Section -->
+        <section class="section motivation-section" id="motivation">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Daily Motivation</h2>
+                    <p class="section-subtitle">Fuel your journey with inspiring messages</p>
+                </div>
+                
+                <div class="motivation-card" role="article">
+                    <div class="motivation-icon" aria-hidden="true">💪</div>
+                    <blockquote class="motivation-quote">
+                        <p id="motivation-text" class="quote-text">
+                            "Success is not final, failure is not fatal: it is the courage to continue that counts."
+                        </p>
+                        <footer class="quote-author">— Winston Churchill</footer>
+                    </blockquote>
+                    <button class="btn btn-outline" id="new-motivation-btn" aria-label="Get new motivation">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                        </svg>
+                        New Quote
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Study Tips Section -->
+        <section class="section study-tips-section" id="study-tips">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Study Tips & Strategies</h2>
+                    <p class="section-subtitle">Proven techniques to boost your learning</p>
+                </div>
+                
+                <div class="tips-grid">
+                    <article class="tip-card">
+                        <div class="tip-icon" aria-hidden="true">🧠</div>
+                        <h3 class="tip-title">Active Recall</h3>
+                        <p class="tip-description">
+                            Test yourself regularly instead of re-reading. Active recall strengthens memory retention by 50% more than passive review.
+                        </p>
+                        <a href="#" class="tip-link">Learn technique →</a>
+                    </article>
+                    
+                    <article class="tip-card">
+                        <div class="tip-icon" aria-hidden="true">⏱️</div>
+                        <h3 class="tip-title">Pomodoro Technique</h3>
+                        <p class="tip-description">
+                            Study in focused 25-minute intervals with 5-minute breaks. Maintains concentration and prevents burnout.
+                        </p>
+                        <a href="#" class="tip-link">Start timer →</a>
+                    </article>
+                    
+                    <article class="tip-card">
+                        <div class="tip-icon" aria-hidden="true">🗺️</div>
+                        <h3 class="tip-title">Mind Mapping</h3>
+                        <p class="tip-description">
+                            Visualize connections between concepts. Mind maps help organize complex topics and improve understanding.
+                        </p>
+                        <a href="#" class="tip-link">Create map →</a>
+                    </article>
+                    
+                    <article class="tip-card">
+                        <div class="tip-icon" aria-hidden="true">📝</div>
+                        <h3 class="tip-title">Cornell Notes</h3>
+                        <p class="tip-description">
+                            Divide your notes into cues, notes, and summary sections. Perfect for organizing lecture content and revision.
+                        </p>
+                        <a href="#" class="tip-link">Get template →</a>
+                    </article>
+                    
+                    <article class="tip-card">
+                        <div class="tip-icon" aria-hidden="true">👥</div>
+                        <h3 class="tip-title">Study Groups</h3>
+                        <p class="tip-description">
+                            Collaborate with peers to discuss concepts. Teaching others reinforces your own understanding.
+                        </p>
+                        <a href="#" class="tip-link">Find groups →</a>
+                    </article>
+                    
+                    <article class="tip-card">
+                        <div class="tip-icon" aria-hidden="true">🎯</div>
+                        <h3 class="tip-title">SMART Goals</h3>
+                        <p class="tip-description">
+                            Set Specific, Measurable, Achievable, Relevant, and Time-bound goals for effective study planning.
+                        </p>
+                        <a href="#" class="tip-link">Set goals →</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Preparation Checklist Section -->
+        <section class="section checklist-section" id="checklist">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Your Preparation Checklist</h2>
+                    <p class="section-subtitle">Track your progress towards polytechnic readiness</p>
+                </div>
+                
+                <div class="checklist-container">
+                    <div class="progress-overview">
+                        <div class="progress-circle" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <svg class="progress-ring" width="120" height="120">
+                                <circle class="progress-ring-circle" stroke="#E5E7EB" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                                <circle class="progress-ring-fill" stroke="#6366F1" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                            </svg>
+                            <div class="progress-text">
+                                <span class="progress-percentage">0%</span>
+                                <span class="progress-label">Complete</span>
+                            </div>
+                        </div>
+                        <p class="progress-message">Let's get started on your journey!</p>
+                    </div>
+                    
+                    <ul class="checklist" role="list">
+                        <li class="checklist-item">
+                            <input type="checkbox" id="check-1" class="checklist-checkbox">
+                            <label for="check-1" class="checklist-label">
+                                <span class="checkbox-custom"></span>
+                                <span class="checklist-text">Research your chosen diploma course curriculum</span>
+                            </label>
+                        </li>
+                        <li class="checklist-item">
+                            <input type="checkbox" id="check-2" class="checklist-checkbox">
+                            <label for="check-2" class="checklist-label">
+                                <span class="checkbox-custom"></span>
+                                <span class="checklist-text">Review O/N-Level subject requirements</span>
+                            </label>
+                        </li>
+                        <li class="checklist-item">
+                            <input type="checkbox" id="check-3" class="checklist-checkbox">
+                            <label for="check-3" class="checklist-label">
+                                <span class="checkbox-custom"></span>
+                                <span class="checklist-text">Create a study timetable for remaining weeks</span>
+                            </label>
+                        </li>
+                        <li class="checklist-item">
+                            <input type="checkbox" id="check-4" class="checklist-checkbox">
+                            <label for="check-4" class="checklist-label">
+                                <span class="checkbox-custom"></span>
+                                <span class="checklist-text">Identify weak subjects and allocate extra time</span>
+                            </label>
+                        </li>
+                        <li class="checklist-item">
+                            <input type="checkbox" id="check-5" class="checklist-checkbox">
+                            <label for="check-5" class="checklist-label">
+                                <span class="checkbox-custom"></span>
+                                <span class="checklist-text">Join online study groups or forums</span>
+                            </label>
+                        </li>
+                        <li class="checklist-item">
+                            <input type="checkbox" id="check-6" class="checklist-checkbox">
+                            <label for="check-6" class="checklist-label">
+                                <span class="checkbox-custom"></span>
+                                <span class="checklist-text">Complete past year papers (at least 5)</span>
+                            </label>
+                        </li>
+                        <li class="checklist-item">
+                            <input type="checkbox" id="check-7" class="checklist-checkbox">
+                            <label for="check-7" class="checklist-label">
+                                <span class="checkbox-custom"></span>
+                                <span class="checklist-text">Prepare essential stationery and materials</span>
+                            </label>
+                        </li>
+                        <li class="checklist-item">
+                            <input type="checkbox" id="check-8" class="checklist-checkbox">
+                            <label for="check-8" class="checklist-label">
+                                <span class="checkbox-custom"></span>
+                                <span class="checklist-text">Set up a dedicated study space</span>
+                            </label>
+                        </li>
+                    </ul>
+                    
+                    <button class="btn btn-outline" id="reset-checklist-btn">Reset Progress</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources Section -->
+        <section class="section resources-section" id="resources">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Helpful Resources</h2>
+                    <p class="section-subtitle">Everything you need for success</p>
+                </div>
+                
+                <div class="resources-grid">
+                    <a href="#" class="resource-card">
+                        <div class="resource-icon">📖</div>
+                        <h3 class="resource-title">Study Guides</h3>
+                        <p class="resource-description">Comprehensive guides for all subjects</p>
+                    </a>
+                    
+                    <a href="#" class="resource-card">
+                        <div class="resource-icon">🎥</div>
+                        <h3 class="resource-title">Video Tutorials</h3>
+                        <p class="resource-description">Visual learning resources</p>
+                    </a>
+                    
+                    <a href="#" class="resource-card">
+                        <div class="resource-icon">💬</div>
+                        <h3 class="resource-title">Community Forum</h3>
+                        <p class="resource-description">Connect with fellow students</p>
+                    </a>
+                    
+                    <a href="#" class="resource-card">
+                        <div class="resource-icon">🎓</div>
+                        <h3 class="resource-title">Course Information</h3>
+                        <p class="resource-description">Polytechnic diploma details</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <svg class="logo" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect width="32" height="32" rx="8" fill="#6366F1"/>
+                            <path d="M16 8L20 12L16 16L12 12L16 8Z" fill="white"/>
+                            <path d="M16 16L20 20L16 24L12 20L16 16Z" fill="#34D399"/>
+                        </svg>
+                        <span class="brand-name">PolyMotivator</span>
+                    </div>
+                    <p class="footer-tagline">Empowering your polytechnic journey</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Quick Links</h4>
+                        <ul role="list">
+                            <li><a href="#home">Home</a></li>
+                            <li><a href="#motivation">Motivation</a></li>
+                            <li><a href="#study-tips">Study Tips</a></li>
+                            <li><a href="#checklist">Checklist</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Support</h4>
+                        <ul role="list">
+                            <li><a href="#">Help Center</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 PolyMotivator. All rights reserved.</p>
+                <p>Made with <span aria-label="love">❤️</span> for students in Singapore</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/app.js"></script>
+</body>
+</html>
