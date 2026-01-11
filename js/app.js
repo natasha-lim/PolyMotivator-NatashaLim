@@ -771,7 +771,7 @@ const PDFGenerator = {
 const ImageGenerator = {
     // ⚠️ SECURITY WARNING: API key should ideally be stored on a backend server
     // For production, move this to a secure backend environment
-    // API_KEY: 'AIzaSyDFcTpf2wWHVjBYaY9qjNIjT6aWiXO7GD8',
+    API_KEY: 'AIzaSyDFcTpf2wWHVjBYaY9qjNIjT6aWiXO7GD8',
     
     async generateVisualPath(userInput) {
         const displayContainer = document.getElementById('path-display');
