@@ -11,9 +11,209 @@ const AppState = {
     coursePath: [],
     currentStep: 0,
     chatMessages: [],
-    isGenerating: false
+    isGenerating: false,
+    videosEnabled: true,
+    videoQueue: []
 };
 
+// ===================================
+// AI Avatar Video Player Module
+// ===================================
+const AvatarVideoPlayer = {
+    videoModal: null,
+    currentVideoPlayer: null,
+    closeBtn: null,
+    continueBtn: null,
+    overlayEl: null,
+    fallbackEl: null,
+    fallbackMessage: null,
+    
+    // Fallback messages when videos are not available
+    fallbackMessages: {
+        welcome: "Welcome! I'm Natasha, your AI guide. I've generated a personalized polytechnic pathway plan just for you. Let's explore each step together and make your dreams a reality! 🎓✨",
+        step1: "🎉 Excellent start! You've completed the foundation step. Building strong fundamentals is crucial for your polytechnic journey. Keep up the great work!",
+        step2: "💪 Amazing progress! Two steps down! You're showing real commitment to your future. The next step will build on what you've learned.",
+        step3: "🌟 You're halfway there! This is impressive dedication. Your consistent effort is paving the way to your polytechnic success. Stay motivated!",
+        step4: "🚀 Outstanding! Four steps completed! You're in the home stretch now. Your preparation is really taking shape. Almost there!",
+        step5: "⭐ Brilliant work! Five steps done! You've come so far. Just one more step and you'll have a complete preparation plan. You've got this!",
+        step6: "🎯 Fantastic! Six steps completed! You're so close to finishing your complete pathway plan. This final push will set you up for success!",
+        completion: "🎊 CONGRATULATIONS! You've completed your entire polytechnic pathway plan! You now have a comprehensive roadmap to success. Download your PDF plan and start taking action. Your polytechnic journey begins now! 🎓🌟"
+    },
+    
+    init() {
+        this.videoModal = document.getElementById('video-modal');
+        this.closeBtn = document.getElementById('video-modal-close');
+        this.continueBtn = document.getElementById('video-continue-btn');
+        this.overlayEl = document.getElementById('video-modal-overlay');
+        this.fallbackEl = document.getElementById('video-fallback');
+        this.fallbackMessage = document.getElementById('fallback-message');
+        
+        this.bindEvents();
+    },
+    
+    bindEvents() {
+        this.closeBtn?.addEventListener('click', () => this.closeModal());
+        this.continueBtn?.addEventListener('click', () => this.closeModal());
+        this.overlayEl?.addEventListener('click', () => this.closeModal());
+        
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.videoModal?.classList.contains('active')) {
+                this.closeModal();
+            }
+        });
+    },
+    
+    async playVideo(videoType, stepNumber = null) {
+        if (!AppState.videosEnabled) return;
+        
+        let videoId = '';
+        let fallbackText = '';
+        let modalTitle = 'AI Avatar Message';
+        
+        // Determine which video element to show
+        if (videoType === 'welcome') {
+            videoId = 'video-welcome';
+            fallbackText = this.fallbackMessages.welcome;
+            modalTitle = '👋 Welcome from Natasha';
+        } else if (videoType === 'milestone' && stepNumber) {
+            videoId = `video-step${stepNumber}`;
+            fallbackText = this.fallbackMessages[`step${stepNumber}`] || `Great job completing Step ${stepNumber}!`;
+            modalTitle = `🎉 Step ${stepNumber} Complete!`;
+        } else if (videoType === 'completion') {
+            videoId = 'video-completion';
+            fallbackText = this.fallbackMessages.completion;
+            modalTitle = '🎊 Pathway Complete!';
+        }
+        
+        // Update modal title
+        const titleEl = document.getElementById('video-modal-title');
+        if (titleEl) titleEl.textContent = modalTitle;
+        
+        // Get the video element
+        const videoElement = document.getElementById(videoId);
+        
+        if (videoElement) {
+            const sourceElement = videoElement.querySelector('source');
+            const videoSrc = sourceElement ? sourceElement.getAttribute('src') : '';
+            
+            // Check if video source has been added
+            if (videoSrc && videoSrc.trim() !== '') {
+                // Hide all videos first
+                this.hideAllVideos();
+                
+                // Hide fallback, show this video
+                if (this.fallbackEl) this.fallbackEl.style.display = 'none';
+                videoElement.style.display = 'block';
+                
+                // Store current player
+                this.currentVideoPlayer = videoElement;
+                
+                // Set up event listeners for this video
+                videoElement.addEventListener('ended', () => {
+                    setTimeout(() => this.closeModal(), 1000);
+                }, { once: true });
+                
+                videoElement.addEventListener('error', () => {
+                    console.warn('Video loading error');
+                    this.showFallback(fallbackText);
+                }, { once: true });
+                
+                // Open modal and play
+                this.openModal();
+                
+                // Load and play video
+                videoElement.load();
+                
+                try {
+                    await videoElement.play();
+                } catch (error) {
+                    console.warn('Video autoplay prevented:', error);
+                    // Video will show with controls, user can click play
+                }
+            } else {
+                // No video source - show fallback message
+                this.showFallback(fallbackText);
+            }
+        } else {
+            // Video element not found - show fallback
+            this.showFallback(fallbackText);
+        }
+    },
+    
+    hideAllVideos() {
+        const videoIds = [
+            'video-welcome',
+            'video-step1',
+            'video-step2',
+            'video-step3',
+            'video-step4',
+            'video-step5',
+            'video-step6',
+            'video-completion'
+        ];
+        
+        videoIds.forEach(id => {
+            const video = document.getElementById(id);
+            if (video) {
+                video.style.display = 'none';
+                video.pause();
+                video.currentTime = 0;
+            }
+        });
+    },
+    
+    showFallback(message = '') {
+        if (!this.fallbackEl) return;
+        
+        // Hide all videos, show fallback
+        this.hideAllVideos();
+        this.fallbackEl.style.display = 'block';
+        
+        if (this.fallbackMessage && message) {
+            this.fallbackMessage.textContent = message;
+        }
+        
+        this.openModal();
+    },
+    
+    openModal() {
+        if (this.videoModal) {
+            this.videoModal.classList.add('active');
+            this.videoModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+    },
+    
+    closeModal() {
+        if (this.videoModal) {
+            this.videoModal.classList.remove('active');
+            this.videoModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            
+            // Pause and reset all videos
+            this.hideAllVideos();
+        }
+    },
+    
+    // Play welcome video when path is generated
+    playWelcomeVideo() {
+        this.playVideo('welcome');
+    },
+    
+    // Play milestone video when step is completed
+    playMilestoneVideo(stepNumber) {
+        this.playVideo('milestone', stepNumber);
+    },
+    
+    // Play completion video when all steps are done
+    playCompletionVideo() {
+        this.playVideo('completion');
+    }
+};
+
+// ===================================
+// State Management
 // ===================================
 // Course Path Templates
 // ===================================
@@ -177,6 +377,166 @@ const coursePathTemplates = {
             description: "Highlight your STEM achievements, project work, and genuine passion for engineering in your application.",
             tags: ["Application", "Achievements"]
         }
+    ],
+    hospitality: [
+        {
+            title: "Foundation: Build Service Excellence",
+            description: "Focus on English, communication, and interpersonal skills. Customer service excellence is key in hospitality.",
+            tags: ["English", "Communication", "Service"]
+        },
+        {
+            title: "Gain Industry Exposure",
+            description: "Seek part-time work or volunteer at hotels, restaurants, or events to understand the hospitality environment.",
+            tags: ["Experience", "Industry Exposure"]
+        },
+        {
+            title: "Research Hospitality Diplomas",
+            description: "Explore Hotel & Hospitality Management, Culinary Science, Tourism Management, or Event Management options.",
+            tags: ["Research", "Specializations"]
+        },
+        {
+            title: "Develop Cultural Awareness",
+            description: "Learn about different cultures and customs. Global awareness is crucial in tourism and hospitality.",
+            tags: ["Cultural Awareness", "Global Mindset"]
+        },
+        {
+            title: "Build Leadership Skills",
+            description: "Take on leadership roles in school events or community service to develop team management abilities.",
+            tags: ["Leadership", "Teamwork"]
+        },
+        {
+            title: "Prepare for Interviews",
+            description: "Practice professional presentation, demonstrate passion for service, and showcase your people skills.",
+            tags: ["Interview", "Professionalism"]
+        }
+    ],
+    media: [
+        {
+            title: "Foundation: Enhance Communication Skills",
+            description: "Excel in English, Literature, and subjects involving creative writing. Strong communication is essential.",
+            tags: ["English", "Writing", "Communication"]
+        },
+        {
+            title: "Build Your Media Portfolio",
+            description: "Create content - videos, articles, podcasts, or social media campaigns to showcase your media capabilities.",
+            tags: ["Portfolio", "Content Creation"]
+        },
+        {
+            title: "Learn Media Production Tools",
+            description: "Familiarize yourself with tools like video editing software, audio production, and content management systems.",
+            tags: ["Technical Skills", "Software"]
+        },
+        {
+            title: "Research Media Specializations",
+            description: "Explore Mass Communication, Film & Media Studies, Digital Media Design, or Journalism options.",
+            tags: ["Research", "Specializations"]
+        },
+        {
+            title: "Stay Updated on Media Trends",
+            description: "Follow current media trends, social media evolution, and understand how audiences consume content today.",
+            tags: ["Industry Knowledge", "Trends"]
+        },
+        {
+            title: "Showcase Your Creativity",
+            description: "Prepare a strong portfolio demonstrating your creative work and ability to tell compelling stories.",
+            tags: ["Creativity", "Storytelling"]
+        }
+    ],
+    socialsciences: [
+        {
+            title: "Foundation: Excel in Humanities",
+            description: "Focus on English, History, Geography, and Social Studies. Understanding human behavior and society is key.",
+            tags: ["Humanities", "English", "Social Studies"]
+        },
+        {
+            title: "Develop Research Skills",
+            description: "Practice conducting research, analyzing data, and writing reports. These skills are crucial for social sciences.",
+            tags: ["Research", "Analysis", "Critical Thinking"]
+        },
+        {
+            title: "Explore Social Science Fields",
+            description: "Research diplomas in Psychology, Social Work, Early Childhood Education, or Community Services.",
+            tags: ["Research", "Career Options"]
+        },
+        {
+            title: "Volunteer in Community Programs",
+            description: "Gain experience through volunteering with social service organizations, youth programs, or community centers.",
+            tags: ["Volunteering", "Community Service"]
+        },
+        {
+            title: "Build Empathy and Listening Skills",
+            description: "Develop strong interpersonal skills, active listening, and the ability to work with diverse populations.",
+            tags: ["Empathy", "Soft Skills"]
+        },
+        {
+            title: "Prepare Your Personal Statement",
+            description: "Highlight your passion for helping others and understanding society in your application materials.",
+            tags: ["Application", "Personal Statement"]
+        }
+    ],
+    aviation: [
+        {
+            title: "Foundation: Master Core Sciences",
+            description: "Excel in Mathematics, Physics, and English. Strong technical and communication skills are essential for aviation.",
+            tags: ["Mathematics", "Physics", "English"]
+        },
+        {
+            title: "Understand Aviation Regulations",
+            description: "Learn about aviation safety, international regulations, and industry standards that govern the aviation sector.",
+            tags: ["Regulations", "Safety", "Standards"]
+        },
+        {
+            title: "Research Aviation Career Paths",
+            description: "Explore Aeronautical Engineering, Aviation Management, Aerospace Electronics, or Air Traffic Management.",
+            tags: ["Research", "Career Planning"]
+        },
+        {
+            title: "Develop Spatial Awareness",
+            description: "Practice spatial reasoning through simulators, flight games, or model aircraft to build relevant skills.",
+            tags: ["Spatial Skills", "Technical Practice"]
+        },
+        {
+            title: "Build Technical Knowledge",
+            description: "Learn about aircraft systems, navigation, meteorology, and the technical aspects of flight operations.",
+            tags: ["Technical Knowledge", "Aviation Systems"]
+        },
+        {
+            title: "Prepare for Assessments",
+            description: "Some aviation courses require aptitude tests and medical examinations. Ensure you meet all requirements.",
+            tags: ["Assessments", "Medical Requirements"]
+        }
+    ],
+    maritime: [
+        {
+            title: "Foundation: Strengthen STEM Foundation",
+            description: "Focus on Mathematics, Physics, and Geography. Understanding navigation, engineering, and environmental science is important.",
+            tags: ["Mathematics", "Physics", "Geography"]
+        },
+        {
+            title: "Learn About Maritime Industry",
+            description: "Research the shipping industry, port operations, marine engineering, and global maritime trade.",
+            tags: ["Industry Knowledge", "Maritime"]
+        },
+        {
+            title: "Explore Maritime Specializations",
+            description: "Investigate Marine Engineering, Nautical Studies, Maritime Business, or Shipping Management diplomas.",
+            tags: ["Research", "Specializations"]
+        },
+        {
+            title: "Develop Physical Fitness",
+            description: "Maritime careers often require good physical health. Maintain fitness and be prepared for medical examinations.",
+            tags: ["Physical Fitness", "Health"]
+        },
+        {
+            title: "Build Technical Skills",
+            description: "Learn about navigation systems, ship operations, mechanical systems, and maritime safety procedures.",
+            tags: ["Technical Skills", "Navigation"]
+        },
+        {
+            title: "Understand Career Requirements",
+            description: "Review specific entry requirements including medical fitness, color vision tests, and minimum grade criteria.",
+            tags: ["Requirements", "Medical Standards"]
+        }
     ]
 };
 
@@ -185,29 +545,127 @@ const coursePathTemplates = {
 // ===================================
 const CoursePathGenerator = {
     generatePath(userInput) {
+        console.log('🔄 Generating path for input:', userInput.substring(0, 50) + '...');
+        
+        // Use smart template-based generation with keyword detection
+        return this.generateTemplatePath(userInput);
+    },
+    
+    generateTemplatePath(userInput) {
         // Analyze user input to determine best path template
         const input = userInput.toLowerCase();
         let selectedPath = [];
+        let selectedCategory = '';
         
-        // Simple keyword matching (in production, this would use actual AI/ML)
-        if (input.includes('technology') || input.includes('it') || input.includes('computer') || 
-            input.includes('programming') || input.includes('software') || input.includes('cyber')) {
-            selectedPath = coursePathTemplates.technology;
-        } else if (input.includes('business') || input.includes('marketing') || input.includes('finance') || 
-                   input.includes('accounting') || input.includes('entrepreneur')) {
-            selectedPath = coursePathTemplates.business;
-        } else if (input.includes('design') || input.includes('art') || input.includes('creative') || 
-                   input.includes('media') || input.includes('visual')) {
-            selectedPath = coursePathTemplates.design;
-        } else if (input.includes('health') || input.includes('nursing') || input.includes('medical') || 
-                   input.includes('biomedical') || input.includes('pharmaceutical')) {
-            selectedPath = coursePathTemplates.healthcare;
-        } else if (input.includes('engineering') || input.includes('mechanical') || input.includes('electrical') || 
-                   input.includes('aerospace') || input.includes('robotics')) {
-            selectedPath = coursePathTemplates.engineering;
+        // Enhanced keyword matching with more comprehensive keywords
+        const keywords = {
+            technology: ['technology', 'it', 'computer', 'programming', 'software', 'cyber', 
+                        'coding', 'developer', 'app', 'web', 'digital', 'tech', 'infocomm',
+                        'database', 'cloud', 'network', 'security', 'data', 'analytics', 
+                        'ai', 'artificial intelligence', 'machine learning', 'blockchain',
+                        'iot', 'internet of things', 'python', 'java', 'javascript', 'c++',
+                        'fullstack', 'backend', 'frontend', 'devops', 'game', 'mobile',
+                        'systems', 'infrastructure', 'agile', 'scrum', 'testing', 'qa'],
+            business: ['business', 'marketing', 'finance', 'accounting', 'entrepreneur', 
+                      'management', 'economics', 'commerce', 'trade', 'sales',
+                      'retail', 'consulting', 'hr', 'human resources', 'operations',
+                      'strategy', 'banking', 'investment', 'insurance', 'logistics',
+                      'supply chain', 'procurement', 'hospitality', 'tourism', 'hotel',
+                      'customer service', 'administration', 'leadership', 'startup',
+                      'corporate', 'ecommerce', 'advertising', 'branding', 'pr'],
+            design: ['design', 'art', 'creative', 'media', 'visual', 'graphic', 
+                    'multimedia', 'animation', 'illustration', 'ux', 'ui',
+                    'photography', 'video', 'film', 'production', 'editing',
+                    'advertising design', 'product design', 'interior', 'fashion',
+                    'architect', 'landscape', '3d', 'modeling', 'rendering',
+                    'photoshop', 'illustrator', 'figma', 'sketch', 'adobe',
+                    'branding design', 'typography', 'layout', 'motion graphics'],
+            healthcare: ['health', 'nursing', 'medical', 'biomedical', 'pharmaceutical', 
+                        'healthcare', 'medicine', 'therapy', 'clinical', 'patient',
+                        'doctor', 'physician', 'surgeon', 'dentistry', 'dental',
+                        'pharmacy', 'pharmacist', 'physiotherapy', 'occupational therapy',
+                        'radiology', 'laboratory', 'diagnostic', 'pathology', 'nutrition',
+                        'dietetics', 'optometry', 'paramedic', 'emergency', 'hospital',
+                        'wellness', 'mental health', 'counseling', 'psychology', 'care'],
+            engineering: ['engineering', 'mechanical', 'electrical', 'aerospace', 'robotics',
+                         'civil', 'chemical', 'manufacturing', 'automation',
+                         'industrial', 'structural', 'construction', 'building',
+                         'electronics', 'power', 'energy', 'renewable', 'solar',
+                         'automotive', 'marine', 'naval', 'materials', 'mechatronics',
+                         'process', 'production', 'quality', 'safety', 'maintenance',
+                         'cad', 'autocad', 'solidworks', 'plc', 'hydraulic', 'pneumatic'],
+            hospitality: ['hospitality', 'hotel', 'tourism', 'travel', 'culinary', 'chef',
+                         'restaurant', 'food', 'beverage', 'service', 'resort',
+                         'events', 'catering', 'guest', 'accommodation', 'cruise',
+                         'convention', 'banquet', 'concierge', 'housekeeping',
+                         'front desk', 'sommelier', 'bartender', 'pastry', 'baking'],
+            media: ['media', 'journalism', 'broadcasting', 'news', 'reporter',
+                   'communication', 'public relations', 'content', 'writing',
+                   'editing', 'publishing', 'radio', 'television', 'podcast',
+                   'social media', 'digital media', 'mass comm', 'advertising',
+                   'copywriting', 'storytelling', 'documentary', 'interview',
+                   'blogger', 'vlogger', 'influencer', 'streaming'],
+            socialsciences: ['social', 'psychology', 'sociology', 'counseling',
+                            'social work', 'community', 'early childhood', 'education',
+                            'teaching', 'childcare', 'youth', 'family', 'welfare',
+                            'humanities', 'anthropology', 'behavior', 'human services',
+                            'rehabilitation', 'therapy', 'development', 'nonprofit',
+                            'advocacy', 'disability', 'elderly', 'special needs'],
+            aviation: ['aviation', 'aerospace', 'pilot', 'flight', 'aircraft',
+                      'airline', 'airport', 'aeronautical', 'air traffic',
+                      'aviation management', 'flying', 'cabin crew', 'ground handling',
+                      'cargo', 'logistics', 'navigation', 'aviation safety',
+                      'air transport', 'flight operations', 'drone', 'uav'],
+            maritime: ['maritime', 'marine', 'shipping', 'nautical', 'naval',
+                      'port', 'vessel', 'ship', 'seafaring', 'ocean',
+                      'maritime business', 'logistics', 'shipping management',
+                      'marine engineering', 'offshore', 'port operations',
+                      'cargo', 'maritime law', 'navigation', 'seamanship',
+                      'merchant navy', 'boat', 'yacht', 'maritime safety']
+        };
+        
+        // Count keyword matches for each category
+        const scores = {};
+        for (const [category, words] of Object.entries(keywords)) {
+            scores[category] = words.filter(word => input.includes(word)).length;
+        }
+        
+        // Select category with highest score
+        let maxScore = 0;
+        for (const [category, score] of Object.entries(scores)) {
+            if (score > maxScore) {
+                maxScore = score;
+                selectedCategory = category;
+            }
+        }
+        
+        // If no keywords matched, use technology as default
+        if (maxScore === 0) {
+            selectedCategory = 'technology';
+            console.log('📋 No specific keywords found, using default: technology');
         } else {
-            // Default to general technology path
-            selectedPath = coursePathTemplates.technology;
+            console.log(`📋 Detected category: ${selectedCategory} (${maxScore} keyword matches)`);
+        }
+        
+        selectedPath = coursePathTemplates[selectedCategory];
+        
+        // Show message in chatbot about detected path
+        if (typeof Chatbot !== 'undefined' && Chatbot.addMessage && maxScore > 0) {
+            const categoryNames = {
+                technology: 'Technology/IT',
+                business: 'Business',
+                design: 'Design/Creative',
+                healthcare: 'Healthcare',
+                engineering: 'Engineering',
+                hospitality: 'Hospitality & Tourism',
+                media: 'Media & Communications',
+                socialsciences: 'Social Sciences',
+                aviation: 'Aviation',
+                maritime: 'Maritime'
+            };
+            setTimeout(() => {
+                Chatbot.addMessage('bot', `🎯 Detected interest in ${categoryNames[selectedCategory]}! I've customized your pathway accordingly.`);
+            }, 1500);
         }
         
         // Personalize the path based on user input
@@ -244,7 +702,7 @@ const PDFGenerator = {
         URL.revokeObjectURL(url);
         
         // Show success message in chatbot
-        Chatbot.addMessage('bot', '✅ Pathway plan exported successfully! The document includes space for counsellor notes and parent acknowledgment. Great for student portfolios and follow-up sessions. 📄');
+        Chatbot.addMessage('bot', '✅ Pathway plan exported successfully! Great for your portfolio and tracking your progress. 📄');
     },
     
     createPDFContent() {
@@ -264,16 +722,15 @@ const PDFGenerator = {
         content += 'PERSONALIZED POLYTECHNIC PREPARATION PATHWAY:\n';
         content += '-'.repeat(70) + '\n';
         content += 'This structured plan provides step-by-step guidance for polytechnic\n';
-        content += 'preparation. Students should work through each step systematically.\n';
-        content += 'Counsellors can use this plan as a framework for follow-up sessions.\n\n';
+        content += 'preparation. Students should work through each step systematically.\n\n';
         
         AppState.coursePath.forEach((step, index) => {
             content += `STEP ${step.stepNumber}: ${step.title.toUpperCase()}\n`;
             content += `${'-'.repeat(70)}\n`;
             content += `Description:\n${step.description}\n\n`;
-            content += `Key Focus Areas:\n`;\
+            content += `Key Focus Areas:\n`;
             step.tags.forEach(tag => {
-                content += `  • ${tag}\n`;\
+                content += `  • ${tag}\n`;
             });
             content += `\nStatus: [ ] Not Started  [ ] In Progress  [ ] Completed\n`;
             content += `Notes:\n${'_'.repeat(70)}\n`;
@@ -286,12 +743,11 @@ const PDFGenerator = {
         content += '1. Work through steps sequentially for best results\n';
         content += '2. Set specific deadlines for each step\n';
         content += '3. Track progress and adjust timeline as needed\n';
-        content += '4. Seek help from counsellors, teachers, or mentors when stuck\n';
+        content += '4. Seek help from teachers or mentors when stuck\n';
         content += '5. Review and update this plan every 2-4 weeks\n\n';
-        content += 'COUNSELLOR NOTES:\n';
+        content += 'NOTES:\n';
         content += '-'.repeat(70) + '\n';
-        content += 'Next Session Date: _____________\n';
-        content += 'Priority Discussion Points:\n';
+        content += 'Progress Updates:\n';
         content += '_'.repeat(70) + '\n';
         content += '_'.repeat(70) + '\n\n';
         content += 'PARENT/GUARDIAN ACKNOWLEDGMENT:\n';
@@ -301,7 +757,7 @@ const PDFGenerator = {
         content += 'Signature: _______________________\n\n';
         content += '='.repeat(70) + '\n';
         content += 'PolyMotivator - Educational Guidance System\n';
-        content += 'For students and school counsellors in Singapore\n';
+        content += 'For students in Singapore\n';
         content += 'Visit: [Your School Career Guidance Portal]\n';
         content += '='.repeat(70) + '\n';
         
@@ -310,15 +766,187 @@ const PDFGenerator = {
 };
 
 // ===================================
+// Google Gemini AI Image Generator
+// ===================================
+const ImageGenerator = {
+    // ⚠️ SECURITY WARNING: API key should ideally be stored on a backend server
+    // For production, move this to a secure backend environment
+    API_KEY: 'AIzaSyDFcTpf2wWHVjBYaY9qjNIjT6aWiXO7GD8',
+    
+    async generateVisualPath(userInput) {
+        const displayContainer = document.getElementById('path-display');
+        
+        // 1. Create a container for the image if it doesn't exist
+        let imgWrapper = document.getElementById('ai-image-wrapper');
+        if (!imgWrapper) {
+            imgWrapper = document.createElement('div');
+            imgWrapper.id = 'ai-image-wrapper';
+            imgWrapper.style = "text-align: center; margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 15px;";
+            displayContainer.prepend(imgWrapper);
+        }
+
+        // 2. Show Loading State
+        imgWrapper.innerHTML = `
+            <div id="ai-loader">
+                <p>🎨 Generating your career roadmap with Google Gemini AI...</p>
+                <div class="spinner"></div> 
+            </div>
+        `;
+
+        try {
+            // 3. Generate image using Google Gemini API
+            const prompt = `Create a detailed visual career roadmap infographic for the following student profile:
+
+${userInput}
+
+Generate a clear, professional career roadmap infographic with:
+- Timeline visualization showing progression from current state to career goal
+- Key milestones with dates/timeframes
+- Educational requirements (diplomas, courses, certifications)
+- Skill development stages
+- Career progression steps
+- Relevant icons and visual elements
+- Clean, modern design with readable text
+- Bright, motivational colors
+- Horizontal timeline format from left to right
+
+Make it inspirational and actionable, suitable for a polytechnic student planning their future.`;
+
+            const imageData = await this.callGeminiAPI(prompt);
+            
+            if (!imageData) {
+                throw new Error('No image data received from Gemini API');
+            }
+
+            // 4. Create and display the image element
+            const imgElement = document.createElement('img');
+            imgElement.src = `data:image/png;base64,${imageData}`;
+            imgElement.alt = "AI-generated career roadmap";
+            imgElement.style = "width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: opacity 0.5s ease-in;";
+            
+            imgWrapper.innerHTML = ''; // Remove loader
+            
+            // Create a container for the image and download button
+            const imageContainer = document.createElement('div');
+            imageContainer.style = "display: flex; flex-direction: column; align-items: center; gap: 15px;";
+            
+            imageContainer.appendChild(imgElement);
+            
+            // 5. Add Download Button
+            const downloadBtn = document.createElement('button');
+            downloadBtn.textContent = '📥 Download Roadmap';
+            downloadBtn.className = 'btn btn-secondary';
+            downloadBtn.style = "padding: 12px 24px; font-size: 16px; cursor: pointer; margin-top: 10px;";
+            
+            downloadBtn.addEventListener('click', () => {
+                try {
+                    // Create a download link for base64 image
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = imgElement.src;
+                    downloadLink.download = `Career_Roadmap_${Date.now()}.png`;
+                    
+                    // Trigger download
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                    
+                    // Show success feedback
+                    downloadBtn.textContent = '✅ Downloaded!';
+                    setTimeout(() => {
+                        downloadBtn.textContent = '📥 Download Roadmap';
+                    }, 2000);
+                } catch (error) {
+                    console.error('Download error:', error);
+                    downloadBtn.textContent = '❌ Download failed';
+                    setTimeout(() => {
+                        downloadBtn.textContent = '📥 Download Roadmap';
+                    }, 2000);
+                }
+            });
+            
+            imageContainer.appendChild(downloadBtn);
+            imgWrapper.appendChild(imageContainer);
+
+        } catch (error) {
+            console.error("Gemini AI Image Generation Error:", error);
+            
+            // Provide detailed error message
+            imgWrapper.innerHTML = `
+                <div style="padding: 20px; background: #fff3cd; border-radius: 10px; border-left: 4px solid #ffc107;">
+                    <h4 style="margin-top: 0; color: #856404;">⚠️ Image Generation Issue</h4>
+                    <p style="color: #856404; margin-bottom: 10px;">Unable to generate visual roadmap at this time.</p>
+                    <p style="color: #856404; font-size: 14px;"><strong>Reason:</strong> ${error.message || 'API connection error'}</p>
+                    <p style="color: #856404; font-size: 14px; margin-top: 10px;">Your detailed career path is still available below. The visual roadmap will be generated once the service is available.</p>
+                </div>
+            `;
+        }
+    },
+    
+    async callGeminiAPI(prompt) {
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=AIzaSyDFcTpf2wWHVjBYaY9qjNIjT6aWiXO7GD8`;
+
+        const requestBody = {
+            contents: [{
+                parts: [{ text: prompt }]
+            }],
+            generationConfig: {
+                temperature: 1.0,
+                topK: 40,
+                topP: 0.95,
+                maxOutputTokens: 8192,
+                // THIS IS THE CRITICAL FIX: Request image (or text + image) output
+                responseModalities: ["IMAGE"]  // Use ["TEXT", "IMAGE"] if you want accompanying text too
+            },
+            // Optional: For better roadmap aspect ratio (horizontal timeline)
+            // Uncomment if you want a wide image
+            // imageConfig: {
+            //     aspectRatio: "16:9"
+            // }
+        };
+
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(`API error: ${err.error?.message || response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Extract base64 image from inline_data (mimeType will be image/png or similar)
+        if (data.candidates?.[0]?.content?.parts) {
+            for (const part of data.candidates[0].content.parts) {
+                if (part.inlineData?.mimeType?.startsWith('image/') && part.inlineData.data) {
+                    return part.inlineData.data;  // Base64 string
+                }
+            }
+        }
+
+        // Fallback error with any text response for debugging
+        const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No output';
+        throw new Error(`No image generated. Text response: ${textResponse.substring(0, 300)}...`);
+    }
+};
+
+// ===================================
 // Chatbot Module
 // ===================================
 const Chatbot = {
+    flowiseApiUrl: 'https://flowise-production-e0ce.up.railway.app/api/v1/prediction/7d208ad3-eb5b-4b3c-9eec-02504f7c0c9a',
+    
     init() {
         this.messagesContainer = document.getElementById('chatbot-messages');
         this.inputField = document.getElementById('chatbot-input-field');
         this.sendBtn = document.getElementById('send-message-btn');
         this.toggleBtn = document.getElementById('chatbot-toggle');
+        this.maximizeBtn = document.getElementById('chatbot-maximize');
+        this.fabBtn = document.getElementById('chatbot-fab');
         this.container = document.getElementById('chatbot');
+        this.isMaximized = false;
         
         this.bindEvents();
     },
@@ -328,12 +956,66 @@ const Chatbot = {
         this.inputField?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.sendMessage();
         });
-        this.toggleBtn?.addEventListener('click', () => this.toggleChat());
+        this.toggleBtn?.addEventListener('click', () => this.closeChat());
+        this.maximizeBtn?.addEventListener('click', () => this.toggleMaximize());
+        this.fabBtn?.addEventListener('click', () => this.openChat());
+    },
+    
+    openChat() {
+        if (this.container) {
+            this.container.style.display = 'block';
+            this.fabBtn.style.display = 'none';
+        }
+    },
+    
+    closeChat() {
+        if (this.container) {
+            this.container.style.display = 'none';
+            this.fabBtn.style.display = 'flex';
+            // Reset to normal size when closing
+            if (this.isMaximized) {
+                this.toggleMaximize();
+            }
+        }
+    },
+    
+    toggleMaximize() {
+        this.isMaximized = !this.isMaximized;
+        this.container?.classList.toggle('maximized');
+        
+        // Update button icon and aria-label
+        if (this.maximizeBtn) {
+            if (this.isMaximized) {
+                this.maximizeBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>
+                    </svg>
+                `;
+                this.maximizeBtn.setAttribute('aria-label', 'Minimize chatbot');
+                this.maximizeBtn.setAttribute('title', 'Minimize');
+            } else {
+                this.maximizeBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                    </svg>
+                `;
+                this.maximizeBtn.setAttribute('aria-label', 'Maximize chatbot');
+                this.maximizeBtn.setAttribute('title', 'Maximize');
+            }
+        }
+        
+        // Scroll to bottom after animation completes
+        setTimeout(() => {
+            if (this.messagesContainer) {
+                this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+            }
+        }, 300);
     },
     
     show() {
-        if (this.container) {
-            this.container.style.display = 'block';
+        // This is called when path is generated - just make fab visible
+        if (this.fabBtn) {
+            this.fabBtn.style.display = 'flex';
         }
     },
     
@@ -341,7 +1023,7 @@ const Chatbot = {
         this.container?.classList.toggle('minimized');
     },
     
-    addMessage(type, text) {
+    addMessage(type, text, isFormatted = false) {
         if (!this.messagesContainer) return;
         
         const messageDiv = document.createElement('div');
@@ -354,9 +1036,15 @@ const Chatbot = {
         const content = document.createElement('div');
         content.className = 'message-content';
         
-        const p = document.createElement('p');
-        p.textContent = text;
-        content.appendChild(p);
+        if (isFormatted) {
+            // Format the response text for better display
+            const formattedText = this.formatResponseText(text);
+            content.innerHTML = formattedText;
+        } else {
+            const p = document.createElement('p');
+            p.textContent = text;
+            content.appendChild(p);
+        }
         
         messageDiv.appendChild(avatar);
         messageDiv.appendChild(content);
@@ -367,6 +1055,72 @@ const Chatbot = {
         AppState.chatMessages.push({ type, text, timestamp: Date.now() });
     },
     
+    formatResponseText(text) {
+        if (!text) return '';
+        
+        // First, clean the text of any unwanted characters
+        let cleaned = text.trim();
+        
+        // Step 1: Convert markdown bold (only **text** format) to HTML
+        cleaned = cleaned.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+        
+        // Step 2: Split into logical sections based on patterns
+        // Add line breaks before common section markers
+        cleaned = cleaned.replace(/(Requirement:|Action Step:|ProTip:|Professional Advice|Academic Foundation|Polytechnic Path|Career Path|Next Steps?:)/gi, '\n\n$1');
+        
+        // Split into paragraphs based on double line breaks
+        let paragraphs = cleaned.split(/\n\n+/);
+        
+        // Step 3: Process each paragraph
+        let formatted = paragraphs.map(para => {
+            para = para.trim();
+            if (!para) return '';
+            
+            // Check if it's a list (lines starting with - or *)
+            const lines = para.split('\n');
+            const isListBlock = lines.every(line => 
+                line.trim().match(/^[\-\*•]\s+/) || line.trim() === ''
+            );
+            
+            if (isListBlock) {
+                // Convert to HTML list
+                const listItems = lines
+                    .filter(line => line.trim())
+                    .map(line => {
+                        const content = line.replace(/^[\-\*•]\s+/, '').trim();
+                        return `<li>${content}</li>`;
+                    })
+                    .join('');
+                return `<ul>${listItems}</ul>`;
+            } else {
+                // Check if this is a section header (Requirement:, ProTip:, etc.)
+                if (para.match(/^(Requirement:|Action Step:|ProTip:|Professional Advice|Academic Foundation|Polytechnic Path|Career Path|Next Steps?:)/i)) {
+                    // Add extra spacing for section headers
+                    para = para.replace(/\n/g, ' ');
+                    return `<p class="section-header">${para}</p>`;
+                } else {
+                    // Regular paragraph - replace single line breaks with spaces for better flow
+                    para = para.replace(/\n/g, ' ');
+                    return `<p>${para}</p>`;
+                }
+            }
+        }).filter(p => p).join('');
+        
+        // Step 4: Clean up any remaining markdown artifacts
+        formatted = formatted
+            // Remove heading markers (with or without space)
+            .replace(/#{1,6}\s*/g, '')
+            // Remove standalone hash symbols
+            .replace(/\s*###\s*/g, ' ')
+            // Remove code block markers
+            .replace(/```[\w]*\n?/g, '')
+            .replace(/`/g, '')
+            // Remove any standalone asterisks or underscores that weren't part of formatting
+            .replace(/(?<!\w)[\*_](?!\w)/g, '');
+        
+        return formatted;
+    },
+    
     sendMessage() {
         const message = this.inputField?.value.trim();
         if (!message) return;
@@ -374,11 +1128,112 @@ const Chatbot = {
         this.addMessage('user', message);
         this.inputField.value = '';
         
-        // Simulate bot response
-        setTimeout(() => {
-            const response = this.generateResponse(message);
-            this.addMessage('bot', response);
-        }, 800);
+        // Call Flowise API for response
+        this.getFlowiseResponse(message);
+    },
+    
+    async getFlowiseResponse(userMessage) {
+        try {
+            // Add typing indicator
+            this.addTypingIndicator();
+            
+            // Create abort controller for timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+            
+            const response = await fetch(this.flowiseApiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    question: userMessage
+                }),
+                signal: controller.signal
+            });
+            
+            clearTimeout(timeoutId);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            // Remove typing indicator
+            this.removeTypingIndicator();
+            
+            // Extract and clean response text
+            let botResponse = data.text || data.answer || data.response || 'I apologize, but I received an unexpected response format. Please try asking your question again.';
+            
+            // Clean up the response
+            botResponse = this.cleanResponse(botResponse);
+            
+            this.addMessage('bot', botResponse, true);
+            
+        } catch (error) {
+            console.error('Flowise API error:', error);
+            
+            // Remove typing indicator
+            this.removeTypingIndicator();
+            
+            // Check if it's a timeout error
+            if (error.name === 'AbortError') {
+                this.addMessage('bot', 'The AI is taking longer than expected to respond. This might be due to server load. Please try again or ask a simpler question.', false);
+            } else {
+                // Fallback to local response on error
+                const fallbackResponse = this.generateResponse(userMessage);
+                this.addMessage('bot', fallbackResponse, false);
+            }
+        }
+    },
+    
+    cleanResponse(text) {
+        if (!text) return '';
+        
+        // Remove any stray symbols or artifacts
+        return text
+            .trim()
+            // Remove excessive spaces
+            .replace(/\s{2,}/g, ' ')
+            // Remove any control characters
+            .replace(/[\x00-\x1F\x7F]/g, '')
+            // Clean up common artifacts
+            .replace(/\[object Object\]/g, '')
+            .replace(/undefined/g, '')
+            .replace(/null/g, '');
+    },
+    
+    addTypingIndicator() {
+        if (!this.messagesContainer) return;
+        
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message bot-message typing-indicator';
+        typingDiv.id = 'typing-indicator';
+        
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        avatar.textContent = '🎓';
+        
+        const content = document.createElement('div');
+        content.className = 'message-content';
+        
+        const p = document.createElement('p');
+        p.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+        content.appendChild(p);
+        
+        typingDiv.appendChild(avatar);
+        typingDiv.appendChild(content);
+        
+        this.messagesContainer.appendChild(typingDiv);
+        this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+    },
+    
+    removeTypingIndicator() {
+        const indicator = document.getElementById('typing-indicator');
+        if (indicator) {
+            indicator.remove();
+        }
     },
     
     generateResponse(userMessage) {
@@ -391,7 +1246,7 @@ const Chatbot = {
         if (msg.includes('hello') || msg.includes('hi')) {
             return "Hello! I'm here to provide guidance throughout this pathway planning session. How can I assist you and the student today? 🎓";
         } else if (msg.includes('counsellor') || msg.includes('counselor') || msg.includes('teacher')) {
-            return "This system is designed to support both independent student exploration and counsellor-guided sessions. You can use the generated pathway plan as a discussion framework during career guidance meetings.";
+            return "This system is designed to help you explore your polytechnic options independently. You can share your generated pathway plan with teachers or mentors for additional guidance if needed.";
         } else if (msg.includes('session') || msg.includes('meeting')) {
             return "For counselling sessions: Review the generated pathway with the student, discuss each step's relevance, and export the plan as a take-home resource. This helps maintain continuity between sessions.";
         } else if (msg.includes('where') || msg.includes('which step') || msg.includes('current')) {
@@ -528,12 +1383,17 @@ const PathDisplay = {
         } else if (step.status === 'active') {
             step.status = 'completed';
             
+            // Play milestone video for completed step
+            AvatarVideoPlayer.playMilestoneVideo(step.stepNumber);
+            
             // Move avatar to next step
             if (index + 1 < AppState.coursePath.length) {
                 AppState.coursePath[index + 1].status = 'active';
                 const nextStep = AppState.coursePath[index + 1];
                 Chatbot.addMessage('bot', `✅ Step ${step.stepNumber} completed: "${step.title}". Moving to Step ${nextStep.stepNumber}: "${nextStep.title}". ${index < 2 ? 'Good progress in this session!' : 'Excellent systematic approach!'} 🎓`);
             } else {
+                // All steps completed - play completion video
+                AvatarVideoPlayer.playCompletionVideo();
                 Chatbot.addMessage('bot', `🎉 Pathway Complete! All ${AppState.coursePath.length} steps reviewed. The student now has a comprehensive preparation roadmap. Recommend exporting for future reference and scheduling follow-up check-ins. 🎓✨`);
             }
         } else if (step.status === 'completed') {
@@ -564,10 +1424,22 @@ const PathDisplay = {
         if (this.totalStepsEl) this.totalStepsEl.textContent = total;
         if (this.progressPercentageEl) this.progressPercentageEl.textContent = percentage;
         
-        // Update avatar position to current active step (avatar walks TO the step)
-        const position = activeStepIndex >= 0 ? ((activeStepIndex) / (total - 1)) * 100 : 100;
+        // Update avatar position to match the progress line
+        // Avatar should be at the end of completed steps (start of active step)
+        let avatarPosition;
+        if (activeStepIndex >= 0) {
+            // Avatar is at the position of the active step
+            avatarPosition = (activeStepIndex / (total - 1)) * 100;
+        } else if (completed === total) {
+            // All completed - avatar at end
+            avatarPosition = 100;
+        } else {
+            // No active step, position at last completed
+            avatarPosition = completed > 0 ? ((completed - 1) / (total - 1)) * 100 : 0;
+        }
+        
         if (this.avatar) {
-            this.avatar.style.left = `${Math.min(100, Math.max(0, position))}%`;
+            this.avatar.style.left = `${Math.min(100, Math.max(0, avatarPosition))}%`;
         }
         
         // Update progress line to show completed portion
@@ -626,6 +1498,11 @@ const InputHandler = {
         const userPlan = this.textarea?.value.trim();
         if (!userPlan) return;
         
+        // Clear previous path if it exists
+        if (AppState.coursePath.length > 0) {
+            this.clearPreviousPath();
+        }
+        
         AppState.userPlan = userPlan;
         AppState.isGenerating = true;
         
@@ -635,11 +1512,15 @@ const InputHandler = {
             this.generateBtn.disabled = true;
         }
         
-        // Simulate AI processing delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        // Generate AI visual representation first
+        // TEMPORARILY DISABLED FOR VIDEO TESTING
+        await ImageGenerator.generateVisualPath(userPlan);
         
-        // Generate course path
-        AppState.coursePath = CoursePathGenerator.generatePath(userPlan);
+        // Simulate AI processing delay
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        // Generate course path using AI
+        AppState.coursePath = await CoursePathGenerator.generatePath(userPlan);
         
         // Display results
         PathDisplay.show();
@@ -647,7 +1528,12 @@ const InputHandler = {
         
         // Show chatbot
         Chatbot.show();
-        Chatbot.addMessage('bot', `Pathway analysis complete! I've generated a ${AppState.coursePath.length}-step personalized plan based on the student profile. Counsellors: Use this as a discussion framework. Students: Follow along step-by-step. Click Step 1 to begin! 🎓✨`);
+        Chatbot.addMessage('bot', `Pathway analysis complete! I've generated a ${AppState.coursePath.length}-step personalized plan based on your profile. Follow along step-by-step and click Step 1 to begin! 🎓✨`);
+        
+        // Play welcome video from AI Avatar
+        setTimeout(() => {
+            AvatarVideoPlayer.playWelcomeVideo();
+        }, 1000);
         
         // Scroll to results
         document.getElementById('path-display')?.scrollIntoView({ behavior: 'smooth' });
@@ -658,6 +1544,21 @@ const InputHandler = {
         }
         
         AppState.isGenerating = false;
+    },
+    
+    clearPreviousPath() {
+        // Clear the course path array
+        AppState.coursePath = [];
+        AppState.currentStep = 0;
+        
+        // Clear the visual display
+        const pathContainer = document.getElementById('course-path');
+        if (pathContainer) {
+            pathContainer.innerHTML = '';
+        }
+        
+        // Reset progress indicators
+        PathDisplay.updateProgress();
     }
 };
 
@@ -790,6 +1691,105 @@ const Navigation = {
 };
 
 // ===================================
+// Scroll Animations Module
+// ===================================
+const ScrollAnimations = {
+    init() {
+        this.observeElements();
+    },
+    
+    observeElements() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe elements that should animate on scroll
+        document.querySelectorAll('.step-card, .info-card, .resource-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            observer.observe(el);
+        });
+    }
+};
+
+// ===================================
+// Accessibility Module
+// ===================================
+const Accessibility = {
+    init() {
+        this.setupKeyboardNavigation();
+        this.setupFocusManagement();
+        this.setupAriaLiveRegions();
+    },
+    
+    setupKeyboardNavigation() {
+        // Allow Escape key to close chatbot
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const chatbot = document.getElementById('chatbot');
+                if (chatbot && !chatbot.classList.contains('minimized')) {
+                    Chatbot.toggleChat();
+                }
+            }
+        });
+    },
+    
+    setupFocusManagement() {
+        // Trap focus within modal dialogs if needed
+        const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        
+        document.querySelectorAll('.chatbot-container').forEach(container => {
+            const firstFocusable = container.querySelectorAll(focusableElements)[0];
+            const focusableContent = container.querySelectorAll(focusableElements);
+            const lastFocusable = focusableContent[focusableContent.length - 1];
+            
+            container.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey && document.activeElement === firstFocusable) {
+                        lastFocusable?.focus();
+                        e.preventDefault();
+                    } else if (!e.shiftKey && document.activeElement === lastFocusable) {
+                        firstFocusable?.focus();
+                        e.preventDefault();
+                    }
+                }
+            });
+        });
+    },
+    
+    setupAriaLiveRegions() {
+        // Create live region for dynamic updates
+        const liveRegion = document.createElement('div');
+        liveRegion.setAttribute('aria-live', 'polite');
+        liveRegion.setAttribute('aria-atomic', 'true');
+        liveRegion.className = 'sr-only';
+        liveRegion.id = 'aria-live-region';
+        document.body.appendChild(liveRegion);
+    },
+    
+    announceToScreenReader(message) {
+        const liveRegion = document.getElementById('aria-live-region');
+        if (liveRegion) {
+            liveRegion.textContent = message;
+            setTimeout(() => {
+                liveRegion.textContent = '';
+            }, 1000);
+        }
+    }
+};
+
+// ===================================
 // Application Initialization
 // ===================================
 function initApp() {
@@ -807,6 +1807,7 @@ function init() {
     InputHandler.init();
     PathDisplay.init();
     Chatbot.init();
+    AvatarVideoPlayer.init();
     ScrollAnimations.init();
     Accessibility.init();
     

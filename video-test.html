@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player Test - PolyMotivator</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0EA5E9;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 10px;
+            border-left: 4px solid #0EA5E9;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #1F2937;
+        }
+        .btn {
+            background: #0EA5E9;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.2s;
+        }
+        .btn:hover {
+            background: #0284C7;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #10B981;
+        }
+        .btn-secondary:hover {
+            background: #059669;
+        }
+        .info-box {
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .info-box strong {
+            color: #1E40AF;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .status.success {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+        .status.error {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+        .status.info {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎥 Video Player Test Page</h1>
+        <p class="subtitle">Test the AI Avatar video system before adding actual video files</p>
+        
+        <div class="info-box">
+            <strong>ℹ️ How to use this test page:</strong>
+            <ul>
+                <li>Click each button to test different video scenarios</li>
+                <li>If videos are not yet added, you'll see fallback messages</li>
+                <li>Add video files to the <code>/videos</code> folder and test again</li>
+                <li>Check browser console (F12) for any error messages</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h3>🎬 Welcome Video Test</h3>
+            <p>This video plays when a course path is first generated</p>
+            <button class="btn" onclick="testWelcomeVideo()">▶️ Test Welcome Video</button>
+            <div id="status-welcome" class="status" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 Milestone Videos Test</h3>
+            <p>These videos play when students complete each step</p>
+            <button class="btn btn-secondary" onclick="testMilestoneVideo(1)">Step 1</button>
+            <button class="btn btn-secondary" onclick="testMilestoneVideo(2)">Step 2</button>
+            <button class="btn btn-secondary" onclick="testMilestoneVideo(3)">Step 3</button>
+            <button class="btn btn-secondary" onclick="testMilestoneVideo(4)">Step 4</button>
+            <button class="btn btn-secondary" onclick="testMilestoneVideo(5)">Step 5</button>
+            <button class="btn btn-secondary" onclick="testMilestoneVideo(6)">Step 6</button>
+            <div id="status-milestone" class="status" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🎊 Completion Video Test</h3>
+            <p>This video plays when all steps are completed</p>
+            <button class="btn" onclick="testCompletionVideo()">▶️ Test Completion Video</button>
+            <div id="status-completion" class="status" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📋 Video File Checklist</h3>
+            <button class="btn" onclick="checkVideoFiles()">🔍 Check Video Files</button>
+            <div id="video-checklist" style="margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <!-- Include the video modal from main page -->
+    <div class="video-modal" id="video-modal" aria-hidden="true" role="dialog" aria-labelledby="video-modal-title">
+        <div class="video-modal-overlay" id="video-modal-overlay"></div>
+        <div class="video-modal-content">
+            <button class="video-modal-close" id="video-modal-close" aria-label="Close video">
+                <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+            </button>
+            <div class="video-modal-header">
+                <h3 id="video-modal-title" class="video-modal-title">AI Avatar Message</h3>
+            </div>
+            <div class="video-modal-body">
+                <video 
+                    id="avatar-video-player" 
+                    class="avatar-video-player"
+                    controls
+                    playsinline
+                    preload="metadata"
+                >
+                    <source id="video-source" src="" type="video/mp4">
+                    <p>Your browser doesn't support video playback. Please upgrade your browser.</p>
+                </video>
+                <div class="video-fallback" id="video-fallback" style="display: none;">
+                    <div class="fallback-icon">🎓</div>
+                    <p class="fallback-message" id="fallback-message"></p>
+                </div>
+            </div>
+            <div class="video-modal-footer">
+                <button class="btn btn-primary" id="video-continue-btn">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Test functions
+        function testWelcomeVideo() {
+            showStatus('status-welcome', 'Testing welcome video...', 'info');
+            AvatarVideoPlayer.playWelcomeVideo();
+        }
+
+        function testMilestoneVideo(step) {
+            showStatus('status-milestone', `Testing milestone video for Step ${step}...`, 'info');
+            AvatarVideoPlayer.playMilestoneVideo(step);
+        }
+
+        function testCompletionVideo() {
+            showStatus('status-completion', 'Testing completion video...', 'info');
+            AvatarVideoPlayer.playCompletionVideo();
+        }
+
+        function showStatus(elementId, message, type) {
+            const statusEl = document.getElementById(elementId);
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+            statusEl.style.display = 'block';
+        }
+
+        async function checkVideoFiles() {
+            const checklist = document.getElementById('video-checklist');
+            checklist.innerHTML = '<p>Checking video files...</p>';
+
+            const videos = [
+                { path: 'videos/welcome/welcome.mp4', name: 'Welcome Video' },
+                { path: 'videos/milestones/step1_complete.mp4', name: 'Step 1 Milestone' },
+                { path: 'videos/milestones/step2_complete.mp4', name: 'Step 2 Milestone' },
+                { path: 'videos/milestones/step3_complete.mp4', name: 'Step 3 Milestone' },
+                { path: 'videos/milestones/step4_complete.mp4', name: 'Step 4 Milestone' },
+                { path: 'videos/milestones/step5_complete.mp4', name: 'Step 5 Milestone' },
+                { path: 'videos/milestones/step6_complete.mp4', name: 'Step 6 Milestone' },
+                { path: 'videos/completion/pathway_complete.mp4', name: 'Completion Video' }
+            ];
+
+            let resultsHTML = '<ul style="list-style: none; padding: 0;">';
+            
+            for (const video of videos) {
+                const exists = await checkFileExists(video.path);
+                const icon = exists ? '✅' : '❌';
+                const status = exists ? 'Found' : 'Missing';
+                const color = exists ? '#059669' : '#DC2626';
+                resultsHTML += `<li style="padding: 8px; margin: 5px 0; background: ${exists ? '#D1FAE5' : '#FEE2E2'}; border-radius: 5px; color: ${color};">
+                    ${icon} <strong>${video.name}</strong>: ${status}
+                </li>`;
+            }
+            
+            resultsHTML += '</ul>';
+            checklist.innerHTML = resultsHTML;
+        }
+
+        async function checkFileExists(path) {
+            try {
+                const response = await fetch(path, { method: 'HEAD' });
+                return response.ok;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        // Initialize video player when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            AvatarVideoPlayer.init();
+            console.log('Video test page ready! Click buttons to test videos.');
+        });
+    </script>
+</body>
+</html>

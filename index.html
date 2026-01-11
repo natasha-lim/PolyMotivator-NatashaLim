@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PolyMotivator - AI-powered polytechnic course path guidance system for students and school counsellors. Generate personalized diploma recommendations and step-by-step preparation plans.">
+    <meta name="description" content="PolyMotivator - AI-powered polytechnic course path guidance system for students. Generate personalized diploma recommendations and step-by-step preparation plans.">
     <meta name="keywords" content="polytechnic, career guidance, school counselling, diploma planning, O-Level, N-Level, ITE, Singapore, career pathway">
     <meta name="author" content="PolyMotivator - Educational Guidance System">
     <meta name="theme-color" content="#6366F1">
@@ -28,19 +28,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Skip to main content for accessibility -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-    
     <!-- Header -->
     <header class="header" role="banner">
         <nav class="nav-container" role="navigation" aria-label="Main navigation">
             <div class="nav-brand">
-                <svg class="logo" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <rect width="32" height="32" rx="8" fill="#6366F1"/>
-                    <path d="M16 8L20 12L16 16L12 12L16 8Z" fill="white"/>
-                    <path d="M16 16L20 20L16 24L12 20L16 16Z" fill="#34D399"/>
-                </svg>
-                <span class="brand-name">PolyMotivator</span>
+                <img src="assets/PolyMotivator Logo.png" alt="PolyMotivator Logo" class="logo">
             </div>
             
             <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
@@ -48,10 +40,11 @@
             </button>
             
             <ul class="nav-menu" role="list">
-                <li><a href="#home" class="nav-link active">Home</a></li>
-                <li><a href="#generator" class="nav-link">Generate Path</a></li>
-                <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
-                <li><a href="#resources" class="nav-link">Resources</a></li>
+                <li><a href="#" class="nav-link">Interest Quiz (Trexi)</a></li>
+                <li><a href="#" class="nav-link">Strength Assessment (Ethan)</a></li>
+                <li><a href="#" class="nav-link">Polytechnic Explorer (Karolyn)</a></li>
+                <li><a href="#" class="nav-link">Preparation Tips (Osman)</a></li>
+                <li><a href="#home" class="nav-link active">Pathway Guide (Natasha)</a></li>
             </ul>
         </nav>
     </header>
@@ -67,28 +60,48 @@
                         <span class="highlight">Personalized Polytechnic</span> Course Pathway Planning
                     </h1>
                     <p class="hero-subtitle">
-                        An intelligent guidance system designed for students and school counsellors to create tailored polytechnic preparation roadmaps based on individual strengths, interests, and diploma aspirations.
+                        An intelligent guidance system designed for students to create tailored polytechnic preparation roadmaps based on individual strengths, interests, and diploma aspirations.
                     </p>
-                    <div class="hero-features">
-                        <div class="feature-badge">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
-                            </svg>
-                            For Students
-                        </div>
-                        <div class="feature-badge">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
-                            </svg>
-                            For Counsellors
-                        </div>
-                        <div class="feature-badge">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd"/>
-                            </svg>
-                            PDF Export
-                        </div>
-                    </div>
+                    <a href="#generator" class="btn btn-primary btn-hero">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                        </svg>
+                        Begin
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="section how-it-works-section" id="how-it-works">
+            <div class="container">
+                <div class="steps-grid">
+                    <article class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-icon" aria-hidden="true">✍️</div>
+                        <h3 class="step-title">Share Your Plan</h3>
+                        <p class="step-description">
+                            Tell us about your interests, academic strengths, and diploma preferences. The more details you share, the better your personalized path.
+                        </p>
+                    </article>
+                    
+                    <article class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-icon" aria-hidden="true">🤖</div>
+                        <h3 class="step-title">AI Analysis</h3>
+                        <p class="step-description">
+                            Our intelligent system analyzes your input and creates a step-by-step course path tailored to your goals and strengths.
+                        </p>
+                    </article>
+                    
+                    <article class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-icon" aria-hidden="true">📄</div>
+                        <h3 class="step-title">Download & Follow</h3>
+                        <p class="step-description">
+                            Get your personalized path as a PDF guide. Track your progress with our interactive avatar and chatbot support.
+                        </p>
+                    </article>
                 </div>
             </div>
         </section>
@@ -99,23 +112,6 @@
                 <div class="generator-container">
                     <!-- Input Area -->
                     <div class="input-section">
-                        <div class="session-info">
-                            <div class="info-card">
-                                <span class="info-icon">👨‍🎓</span>
-                                <div class="info-content">
-                                    <h4>For Students</h4>
-                                    <p>Explore your polytechnic options independently</p>
-                                </div>
-                            </div>
-                            <div class="info-card">
-                                <span class="info-icon">👨‍🏫</span>
-                                <div class="info-content">
-                                    <h4>For Counsellors</h4>
-                                    <p>Guide students during career counselling sessions</p>
-                                </div>
-                            </div>
-                        </div>
-                        
                         <label for="student-plan" class="input-label">
                             <span class="label-icon">💭</span>
                             <span class="label-text">Student Information & Career Interests</span>
@@ -123,7 +119,7 @@
                         <textarea 
                             id="student-plan" 
                             class="plan-textarea" 
-                            placeholder="Enter student's academic profile and career interests...&#10;&#10;Example:&#10;- Academic Strengths: Mathematics (A2), Science (B3), English (B4)&#10;- Interests: Technology, problem-solving, creating apps&#10;- Diploma Considerations: Information Technology, Cybersecurity&#10;- Career Goals: Software developer or IT security specialist&#10;- Preferred Learning Style: Hands-on, project-based&#10;&#10;Counsellors: Use this during sessions to generate personalized guidance plans for students."
+                            placeholder="Enter your academic profile and career interests...&#10;&#10;Example:&#10;- Academic Strengths: Mathematics (A2), Science (B3), English (B4)&#10;- Interests: Technology, problem-solving, creating apps&#10;- Diploma Considerations: Information Technology, Cybersecurity&#10;- Career Goals: Software developer or IT security specialist&#10;- Preferred Learning Style: Hands-on, project-based"
                             rows="6"
                             aria-describedby="plan-hint"
                         ></textarea>
@@ -187,44 +183,6 @@
                             <!-- Steps will be dynamically generated here -->
                         </div>
                     </div>
-
-                    <!-- Chatbot Interface -->
-                    <div class="chatbot-container" id="chatbot" style="display: none;">
-                        <div class="chatbot-header">
-                            <div class="chatbot-avatar">🎓</div>
-                            <div class="chatbot-info">
-                                <h3 class="chatbot-name">Guidance Assistant</h3>
-                                <p class="chatbot-status">Ready to help</p>
-                            </div>
-                            <button class="chatbot-toggle" id="chatbot-toggle" aria-label="Minimize chatbot">
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="chatbot-messages" id="chatbot-messages">
-                            <div class="message bot-message">
-                                <div class="message-avatar">🎓</div>
-                                <div class="message-content">
-                                    <p>Hello! I'm the PolyMotivator Guidance Assistant. I'll help analyze the student profile and provide personalized pathway recommendations. Feel free to ask questions during the session!</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="chatbot-input">
-                            <input 
-                                type="text" 
-                                id="chatbot-input-field" 
-                                class="chatbot-field" 
-                                placeholder="Ask about your course path..."
-                                aria-label="Chat message"
-                            />
-                            <button class="btn-send" id="send-message-btn" aria-label="Send message">
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
@@ -251,45 +209,6 @@
                         </svg>
                         New Quote
                     </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- How It Works Section -->
-        <section class="section how-it-works-section" id="how-it-works">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">How It Works</h2>
-                    <p class="section-subtitle">Your personalized path in three simple steps</p>
-                </div>
-                
-                <div class="steps-grid">
-                    <article class="step-card">
-                        <div class="step-number">1</div>
-                        <div class="step-icon" aria-hidden="true">✍️</div>
-                        <h3 class="step-title">Share Your Plan</h3>
-                        <p class="step-description">
-                            Tell us about your interests, academic strengths, and diploma preferences. The more details you share, the better your personalized path.
-                        </p>
-                    </article>
-                    
-                    <article class="step-card">
-                        <div class="step-number">2</div>
-                        <div class="step-icon" aria-hidden="true">🤖</div>
-                        <h3 class="step-title">AI Analysis</h3>
-                        <p class="step-description">
-                            Our intelligent system analyzes your input and creates a step-by-step course path tailored to your goals and strengths.
-                        </p>
-                    </article>
-                    
-                    <article class="step-card">
-                        <div class="step-number">3</div>
-                        <div class="step-icon" aria-hidden="true">📄</div>
-                        <h3 class="step-title">Download & Follow</h3>
-                        <p class="step-description">
-                            Get your personalized path as a PDF guide. Track your progress with our interactive avatar and chatbot support.
-                        </p>
-                    </article>
                 </div>
             </div>
         </section>
@@ -446,43 +365,190 @@
                 </div>
             </div>
         </section>
+    </main>
 
-        <!-- Resources Section -->
-        <section class="section resources-section" id="resources">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Helpful Resources</h2>
-                    <p class="section-subtitle">Everything you need for success</p>
-                </div>
-                
-                <div class="resources-grid">
-                    <a href="#" class="resource-card">
-                        <div class="resource-icon">📖</div>
-                        <h3 class="resource-title">Study Guides</h3>
-                        <p class="resource-description">Comprehensive guides for all subjects</p>
-                    </a>
-                    
-                    <a href="#" class="resource-card">
-                        <div class="resource-icon">🎥</div>
-                        <h3 class="resource-title">Video Tutorials</h3>
-                        <p class="resource-description">Visual learning resources</p>
-                    </a>
-                    
-                    <a href="#" class="resource-card">
-                        <div class="resource-icon">💬</div>
-                        <h3 class="resource-title">Community Forum</h3>
-                        <p class="resource-description">Connect with fellow students</p>
-                    </a>
-                    
-                    <a href="#" class="resource-card">
-                        <div class="resource-icon">🎓</div>
-                        <h3 class="resource-title">Course Information</h3>
-                        <p class="resource-description">Polytechnic diploma details</p>
-                    </a>
+    <!-- Floating Chatbot Button -->
+    <button class="chatbot-fab" id="chatbot-fab" aria-label="Open guidance assistant">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+        </svg>
+    </button>
+
+    <!-- Chatbot Interface -->
+    <div class="chatbot-container" id="chatbot" style="display: none;">
+        <div class="chatbot-header">
+            <div class="chatbot-avatar">🎓</div>
+            <div class="chatbot-info">
+                <h3 class="chatbot-name">Guidance Assistant</h3>
+                <p class="chatbot-status">Ready to help</p>
+            </div>
+            <button class="chatbot-maximize" id="chatbot-maximize" aria-label="Maximize chatbot" title="Maximize">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                </svg>
+            </button>
+            <button class="chatbot-toggle" id="chatbot-toggle" aria-label="Close chatbot">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="chatbot-messages">
+            <div class="message bot-message">
+                <div class="message-avatar">🎓</div>
+                <div class="message-content">
+                    <p>Hello! I'm the PolyMotivator Guidance Assistant. I'll help analyze the student profile and provide personalized pathway recommendations. Feel free to ask questions during the session!</p>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+        <div class="chatbot-input">
+            <input 
+                type="text" 
+                id="chatbot-input-field" 
+                class="chatbot-field" 
+                placeholder="Ask about your course path..."
+                aria-label="Chat message"
+            />
+            <button class="btn-send" id="send-message-btn" aria-label="Send message">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- AI Avatar Video Modal -->
+    <div class="video-modal" id="video-modal" aria-hidden="true" role="dialog" aria-labelledby="video-modal-title">
+        <div class="video-modal-overlay" id="video-modal-overlay"></div>
+        <div class="video-modal-content">
+            <button class="video-modal-close" id="video-modal-close" aria-label="Close video">
+                <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+            </button>
+            <div class="video-modal-header">
+                <h3 id="video-modal-title" class="video-modal-title">AI Avatar Message</h3>
+            </div>
+            <div class="video-modal-body">
+                <!-- ============================================ -->
+                <!-- 🎬 ADD YOUR VIDEO SOURCES HERE (src="...") -->
+                <!-- ============================================ -->
+                
+                <!-- Welcome Video - Plays when pathway is generated -->
+                <video 
+                    id="video-welcome" 
+                    class="avatar-video-player"
+                    controls
+                    playsinline
+                    preload="metadata"
+                    style="display: none;"
+                >
+                    <source src="videos/Welcome Video.mp4.mp4" type="video/mp4">
+                    <!-- ↑ ADD YOUR WELCOME VIDEO PATH HERE -->
+                </video>
+                
+                <!-- Step 1 Milestone Video -->
+                <video 
+                    id="video-step1" 
+                    class="avatar-video-player"
+                    controls
+                    playsinline
+                    preload="metadata"
+                    style="display: none;"
+                >
+                    <source src="videos/TASK1.mp4.mp4" type="video/mp4">
+                    <!-- ↑ ADD YOUR STEP 1 VIDEO PATH HERE -->
+                </video>
+                
+                <!-- Step 2 Milestone Video -->
+                <video 
+                    id="video-step2" 
+                    class="avatar-video-player"
+                    controls
+                    playsinline
+                    preload="metadata"
+                    style="display: none;"
+                >
+                    <source src="videos/TASK2.mp4.mp4" type="video/mp4">
+                    <!-- ↑ ADD YOUR STEP 2 VIDEO PATH HERE -->
+                </video>
+                
+                <!-- Step 3 Milestone Video -->
+                <video 
+                    id="video-step3" 
+                    class="avatar-video-player"
+                    controls
+                    playsinline
+                    preload="metadata"
+                    style="display: none;"
+                >
+                    <source src="videos/halfwaythere.mp4" type="video/mp4">
+                    <!-- ↑ ADD YOUR STEP 3 VIDEO PATH HERE -->
+                </video>
+                
+                <!-- Step 4 Milestone Video -->
+                <video 
+                    id="video-step4" 
+                    class="avatar-video-player"
+                    controls
+                    playsinline
+                    preload="metadata"
+                    style="display: none;"
+                >
+                    <source src="videos/TASK2.mp4.mp4" type="video/mp4">
+                    <!-- ↑ ADD YOUR STEP 4 VIDEO PATH HERE -->
+                </video>
+                
+                <!-- Step 5 Milestone Video -->
+                <video 
+                    id="video-step5" 
+                    class="avatar-video-player"
+                    controls
+                    playsinline
+                    preload="metadata"
+                    style="display: none;"
+                >
+                    <source src="videos/TASK2.mp4.mp4" type="video/mp4">
+                    <!-- ↑ ADD YOUR STEP 5 VIDEO PATH HERE -->
+                </video>
+                
+                <!-- Step 6 Milestone Video -->
+                <video 
+                    id="video-step6" 
+                    class="avatar-video-player"
+                    controls
+                    playsinline
+                    preload="metadata"
+                    style="display: none;"
+                >
+                    <source src="videos/almostdone.mp4" type="video/mp4">
+                    <!-- ↑ ADD YOUR STEP 6 VIDEO PATH HERE -->
+                </video>
+                
+                <!-- Completion Video - Plays when all steps done -->
+                <video 
+                    id="video-completion" 
+                    class="avatar-video-player"
+                    controls
+                    playsinline
+                    preload="metadata"
+                    style="display: none;"
+                >
+                    <source src="videos/end.mp4.mp4" type="video/mp4">
+                    <!-- ↑ ADD YOUR COMPLETION VIDEO PATH HERE -->
+                </video>
+                
+                <!-- Fallback message when video not available -->
+                <div class="video-fallback" id="video-fallback" style="display: none;">
+                    <div class="fallback-icon">🎓</div>
+                    <p class="fallback-message" id="fallback-message"></p>
+                </div>
+            </div>
+            <div class="video-modal-footer">
+                <button class="btn btn-primary" id="video-continue-btn">Continue</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer" role="contentinfo">
@@ -490,12 +556,7 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <div class="footer-logo">
-                        <svg class="logo" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <rect width="32" height="32" rx="8" fill="#6366F1"/>
-                            <path d="M16 8L20 12L16 16L12 12L16 8Z" fill="white"/>
-                            <path d="M16 16L20 20L16 24L12 20L16 16Z" fill="#34D399"/>
-                        </svg>
-                        <span class="brand-name">PolyMotivator</span>
+                        <img src="assets/PolyMotivator Logo.png" alt="PolyMotivator Logo" class="logo">
                     </div>
                     <p class="footer-tagline">Professional career guidance system for polytechnic pathway planning</p>
                 </div>
@@ -504,10 +565,11 @@
                     <div class="footer-column">
                         <h4 class="footer-heading">Quick Links</h4>
                         <ul role="list">
-                            <li><a href="#home">Home</a></li>
-                            <li><a href="#generator">Generate Path</a></li>
-                            <li><a href="#how-it-works">How It Works</a></li>
-                            <li><a href="#resources">Resources</a></li>
+                            <li><a href="#">Interest Quiz (Trexi)</a></li>
+                            <li><a href="#">Strength Assessment (Ethan)</a></li>
+                            <li><a href="#">Polytechnic Explorer (Karolyn)</a></li>
+                            <li><a href="#">Preparation Tips (Osman)</a></li>
+                            <li><a href="#home">Pathway Guide (Natasha)</a></li>
                         </ul>
                     </div>
                     
@@ -525,7 +587,7 @@
             
             <div class="footer-bottom">
                 <p>&copy; 2025 PolyMotivator - Educational Guidance System. All rights reserved.</p>
-                <p>Designed for students and school counsellors in Singapore 🇸🇬</p>
+                <p>Designed for students in Singapore 🇸🇬</p>
             </div>
         </div>
     </footer>

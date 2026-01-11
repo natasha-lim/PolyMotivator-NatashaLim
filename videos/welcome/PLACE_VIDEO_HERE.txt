@@ -1,0 +1,13 @@
+PLACE YOUR WELCOME VIDEO HERE
+
+Filename: welcome.mp4
+Duration: 15-30 seconds
+
+This video should:
+- Welcome the student to their personalized pathway
+- Introduce Natasha (the AI guide)
+- Explain what the pathway plan includes
+- Encourage the student to click on Step 1
+
+Example script:
+"Hi! I'm Natasha, your PolyMotivator AI guide. Welcome! I've just created a personalized polytechnic pathway plan tailored to your profile. This plan has [X] carefully designed steps to help you prepare for your diploma journey. Each step builds on the previous one, so let's take this exciting journey together. Click on Step 1 to begin!"
