@@ -883,7 +883,7 @@ Make it inspirational and actionable, suitable for a polytechnic student plannin
     },
     
     async callGeminiAPI(prompt) {
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=AIzaSyAU9tOxI8UX9uWeVJDL482lonRc3aVOSLM`;
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=AIzaSyAU9tOxI8UX9uWeVJDL482lonRc3aVOSLM&callback=initMap`;
 
         const requestBody = {
             contents: [{
