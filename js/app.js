@@ -771,7 +771,7 @@ const PDFGenerator = {
 const ImageGenerator = {
     // ⚠️ SECURITY WARNING: API key should ideally be stored on a backend server
     // For production, move this to a secure backend environment
-    // API_KEY: 'AIzaSyDFcTpf2wWHVjBYaY9qjNIjT6aWiXO7GD8',
+    API_KEY: 'AIzaSyAU9tOxI8UX9uWeVJDL482lonRc3aVOSLM',
     
     async generateVisualPath(userInput) {
         const displayContainer = document.getElementById('path-display');
@@ -883,7 +883,7 @@ Make it inspirational and actionable, suitable for a polytechnic student plannin
     },
     
     async callGeminiAPI(prompt) {
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=`;
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=AIzaSyAU9tOxI8UX9uWeVJDL482lonRc3aVOSLM`;
 
         const requestBody = {
             contents: [{
