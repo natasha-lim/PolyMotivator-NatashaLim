@@ -1409,6 +1409,19 @@ ul, ol {
     transform: scale(0.95);
 }
 
+.chatbot-footer {
+    padding: var(--spacing-2) var(--spacing-4);
+    background-color: var(--color-white);
+    border-top: 1px solid var(--color-gray-200);
+    text-align: center;
+}
+
+.powered-by {
+    font-size: 0.75rem;
+    color: var(--color-gray-500);
+    font-weight: 500;
+}
+
 /* How It Works Section */
 .how-it-works-section {
     background-color: transparent;
