@@ -75,7 +75,7 @@ const AvatarVideoPlayer = {
         if (videoType === 'welcome') {
             videoId = 'video-welcome';
             fallbackText = this.fallbackMessages.welcome;
-            modalTitle = '👋 Welcome from PolyMotivator';
+            modalTitle = 'Welcome from PolyMotivator';
         } else if (videoType === 'milestone' && stepNumber) {
             videoId = `video-step${stepNumber}`;
             fallbackText = this.fallbackMessages[`step${stepNumber}`] || `Great job completing Step ${stepNumber}!`;
