@@ -75,7 +75,7 @@ const AvatarVideoPlayer = {
         if (videoType === 'welcome') {
             videoId = 'video-welcome';
             fallbackText = this.fallbackMessages.welcome;
-            modalTitle = '👋 Welcome from Natasha';
+            modalTitle = '👋 Welcome from PolyMotivator';
         } else if (videoType === 'milestone' && stepNumber) {
             videoId = `video-step${stepNumber}`;
             fallbackText = this.fallbackMessages[`step${stepNumber}`] || `Great job completing Step ${stepNumber}!`;
@@ -769,8 +769,6 @@ const PDFGenerator = {
 // Google Gemini AI Image Generator
 // ===================================
 const ImageGenerator = {
-    // ⚠️ SECURITY WARNING: API key should ideally be stored on a backend server
-    // For production, move this to a secure backend environment
     API_KEY: 'AIzaSyBNwGa2yxkUX-QBddFHQdWqNt1tiCjYt6s',
     
     async generateVisualPath(userInput) {
