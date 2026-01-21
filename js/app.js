@@ -769,7 +769,7 @@ const PDFGenerator = {
 // Google Gemini AI Image Generator
 // ===================================
 const ImageGenerator = {
-    API_KEY: 'AIzaSyACnCnRicelxwbfy3HZIahZ0GDw-XKvjyA',
+    API_KEY: 'AIzaSyAUVHU6gfjhg0UmPdhmhLhAOjlE8wHir4E',
     
     async generateVisualPath(userInput) {
         const displayContainer = document.getElementById('path-display');
@@ -881,7 +881,7 @@ Make it inspirational and actionable, suitable for a polytechnic student plannin
     },
     
     async callGeminiAPI(prompt) {
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=AIzaSyACnCnRicelxwbfy3HZIahZ0GDw-XKvjyA&callback=initMap`;
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=AIzaSyAUVHU6gfjhg0UmPdhmhLhAOjlE8wHir4E&callback=initMap`;
 
         const requestBody = {
             contents: [{
